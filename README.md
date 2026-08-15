@@ -23,4 +23,4 @@ Investigation workflow.
 
 ![Azure ELK Security Lab Architecture](diagrams/architecture.png)
 
-[View High-Resolution Architecture PDF](diagrams/architecture.pdf)
+[View High-Resolution Architecture PDF](diagrams/azure_soc_architecture_final_high_res.pdf)
