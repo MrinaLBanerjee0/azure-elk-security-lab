@@ -21,6 +21,6 @@ Investigation workflow.
 
 ## Architecture
 
-![Azure ELK Security Lab Architecture](diagrams/ELK LAB DIAG.png)
+![Azure ELK Security Lab Architecture](diagrams/diagram.png)
 
 
