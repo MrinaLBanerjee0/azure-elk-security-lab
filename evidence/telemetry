@@ -1,0 +1,11 @@
+# Telemetry Evidence
+
+Screenshots demonstrating endpoint telemetry collection and security event generation.
+
+## Evidence Included
+
+- Elastic Fleet agent enrollment
+- Windows telemetry integrations
+- Sysmon process creation events
+- Windows Defender events
+- Ubuntu SSH authentication events
