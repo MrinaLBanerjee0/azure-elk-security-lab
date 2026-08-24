@@ -1,34 +1,48 @@
 # Azure ELK Security Lab
 
-A hands-on SOC lab built using Microsoft Azure, Elastic Stack, endpoint
-telemetry, attack simulation, and incident ticketing.
+A hands-on Security Operations Center (SOC) lab built in Microsoft Azure using Elastic Stack, Windows Sysmon and Defender telemetry, Ubuntu authentication logs, attack simulation, detection engineering, incident investigation, dashboards, and automated incident ticketing.
 
 ## Project Overview
 
-This project was built to develop practical skills in security monitoring,
-log analysis, threat detection, incident investigation, and network
-troubleshooting.
+This project demonstrates an end-to-end SOC monitoring and investigation workflow:
 
-The lab uses multiple Azure virtual machines across different regions,
-Connected through Azure Virtual Network peering. The project involved
-Troubleshooting connectivity between systems, configuring the Elastic
-Stack, collecting endpoint telemetry, investigating security logs,
-Creating alerts and dashboards, and integrating incident ticketing.
+**Attack Simulation → Telemetry Collection → Detection → Alert Triage → Investigation → Incident Ticketing → Security Monitoring**
 
-The lab also provided practical experience in understanding how the
-Different components work together as part of a security monitoring and
-Investigation workflow.
+The lab was built to practice practical SOC analyst activities, including:
+
+- Collecting and analyzing Windows and Linux security telemetry
+- Monitoring authentication activity
+- Investigating RDP and SSH brute-force activity
+- Creating and validating security detection rules
+- Analyzing endpoint process and security events
+- Investigating alerts using Elastic
+- Generating incidents through automated ticketing
+- Building dashboards for security monitoring
+- Documenting investigation evidence and findings
 
 ## Architecture
 
 ![Azure ELK Security Lab Architecture](diagrams/Diagram.png)
 
+## SOC Workflow
 
-## Project Sections
-
-- [Lab Environment](environment/)
-- [Telemetry Collection](telemetry/)
-- [Detection Engineering](detections/)
-- [Investigations](investigations/)
-- [Automated Incident Ticketing](automation/)
-- [SOC Dashboard](dashboards/)
+```text
+Attack Simulation
+       ↓
+Endpoint / Network Activity
+       ↓
+Telemetry Collection
+       ↓
+Elastic
+       ↓
+Detection Rules
+       ↓
+Security Alert
+       ↓
+Alert Triage
+       ↓
+Investigation
+       ↓
+Incident Ticket
+       ↓
+Dashboard / Reporting
