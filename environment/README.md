@@ -40,13 +40,13 @@ The SOC lab was deployed across three Azure Virtual Networks in different region
 
 The hub VNet is peered with both spoke VNets:
 
-```text
 elaskiba-vnet
      ├── ubuntu-vnet
      └── win-vnet
 
 
 ## Azure Evidence
+
 
 ### Azure Virtual Machine Inventory
 
