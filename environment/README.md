@@ -44,3 +44,30 @@ The hub VNet is peered with both spoke VNets:
 elaskiba-vnet
      ├── ubuntu-vnet
      └── win-vnet
+
+
+## Azure Evidence
+
+### Azure Virtual Machine Inventory
+
+![Azure Virtual Machine Inventory](../evidence/azure-vm-inventory.png)
+
+This screenshot shows the Azure virtual machines used in the lab.
+
+### VNet Peerings
+
+![Azure VNet Peerings](../evidence/azure-vnet-peerings.png)
+
+This shows the configured VNet peerings between the hub and spoke networks.
+
+### myVm Network Configuration
+
+![myVm Network Configuration](../evidence/myvm-network.png)
+
+This shows the private IP and VNet configuration of the myVm ticketing server.
+
+### Elaskiba Network Configuration
+
+![Elaskiba Network Configuration](../evidence/elaskiba-network.png)
+
+This shows the private IP and subnet configuration of the Elaskiba ELK server.
