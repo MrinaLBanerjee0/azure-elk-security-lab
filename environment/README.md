@@ -56,7 +56,7 @@ This screenshot shows the Azure virtual machines used in the lab.
 
 ### VNet Peerings
 
-![Azure VNet Peerings](../evidence/azure-vnet-peerings.png)
+![Azure VNet Peerings](../evidence/azure/azure-vnet-peerings.png)
 
 This shows the configured VNet peerings between the hub and spoke networks.
 
