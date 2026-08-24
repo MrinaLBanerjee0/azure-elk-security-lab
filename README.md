@@ -21,9 +21,10 @@ The lab was built to develop practical SOC analyst skills, including:
 - Building SOC dashboards for security monitoring
 - Documenting investigation evidence and findings
 
-Architecture
 
-"Azure ELK Security Lab Architecture" (diagrams/Diagram.png)
+## Architecture
+
+![Azure ELK Security Lab Architecture](diagrams/Diagram.png)
 
 
 - "## Project Sections
