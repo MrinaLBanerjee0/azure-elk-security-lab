@@ -1,11 +1,14 @@
-
 # Attack Simulation Evidence
 
-Screenshots documenting the attacker-side activity used to generate security telemetry and validate the SOC detection workflow.
+Screenshots documenting attacker-side activity performed to generate security telemetry and test the SOC monitoring environment.
 
-## Evidence Included 
+## Evidence Included
 
-- RDP discovery and connectivity testing
-- RDP brute-force simulation
-- Mythic C2 configuration
-- Mythic payload creation and testing
+- RDP brute-force testing
+- RDP service discovery
+- Mythic payload creation and configuration
+- Mythic C2 profile configuration
+- Mythic agent activity
+- C2 traffic
+
+These screenshots document the attack simulation activities performed against the lab environment.
