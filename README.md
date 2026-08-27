@@ -27,7 +27,7 @@ The lab was built to develop practical SOC analyst skills, including:
 ![Azure ELK Security Lab Architecture](diagrams/Diagram.png)
 
 
-- "## Project Sections
+## Project Sections
 
 - [Lab Environment](environment/)
 - [Telemetry Collection](telemetry/)
