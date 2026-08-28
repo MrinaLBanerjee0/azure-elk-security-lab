@@ -28,4 +28,3 @@ These visualizations support:
 - Identifying spikes in failed SSH authentication
 - Identifying prominent source IP addresses
 - Providing context during security investigations
-- 
