@@ -1,13 +1,21 @@
 # Investigation Evidence
 
-Screenshots documenting the investigation of security alerts and related endpoint activity.
+Screenshots documenting the analyst investigation workflow in Elastic Security.
 
-## Evidence Included
+## SSH Event Detail
 
-- Authentication activity
-- Alert details
-- Source IP information
-- Endpoint event analysis
-- Investigation findings
+![SSH Event Detail](ssh-event-detail.png)
 
-These screenshots document the evidence reviewed during security investigations.
+Shows the details of an individual SSH authentication event, including the process, user, source IP, geographic information, and authentication result.
+
+## User and Source IP Investigation Pivot
+
+![SSH User Source Pivot](ssh-user-source-pivot.png)
+
+Shows an investigation pivot using the username and source IP to narrow the SSH event dataset.
+
+## Failed SSH Authentication Analysis
+
+![SSH Failed Authentication Analysis](ssh-failed-auth-analysis.png)
+
+Shows the investigation narrowed specifically to failed SSH authentication events for the selected user and source.
