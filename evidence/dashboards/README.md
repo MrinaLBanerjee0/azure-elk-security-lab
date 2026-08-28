@@ -1,14 +1,21 @@
+# Dashboard Evidence
 
-# SOC Dashboard Evidence
+Screenshots documenting the Kibana security monitoring dashboard and supporting visualizations used in the SOC lab.
 
-Screenshots documenting the Kibana dashboards and visualizations used for security monitoring.
+## ELK SOC Monitoring Dashboard
 
-## Evidence Included
+![ELK SOC Monitoring Dashboard](elk-soc-monitoring-dashboard.png)
 
-- SOC monitoring dashboard
-- Authentication activity
-- Source IP visualizations
-- Security event visualizations
-- Network activity visualization
+Shows the completed ELK SOC Monitoring Dashboard, including SSH authentication failures over time and the top source IPs.
 
-These screenshots demonstrate the visualization and monitoring capabilities of the SOC environment.
+## SSH Failures Over Time
+
+![SSH Failures Over Time](ssh-failures-over-time.png)
+
+Shows the SSH authentication failure activity over time using a time-series visualization.
+
+## Top Source IP Visualization
+
+![Top Source IP Visualization](top-source-ip-visualization.png)
+
+Shows the top source IP addresses associated with the collected SSH authentication events.
