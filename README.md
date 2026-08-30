@@ -2,6 +2,12 @@ Azure ELK Security Lab
 
 A hands-on Security Operations Center (SOC) lab built in Microsoft Azure using the Elastic Stack, Windows Sysmon and Defender telemetry, Ubuntu authentication logs, attack simulation, detection engineering, incident investigation, security dashboards, and automated incident ticketing.
 
+## Full Investigation Report
+
+📄 **[Read the Complete Azure ELK SOC Investigation Report](SOC-INVESTIGATION-REPORT.md)**
+
+The report documents the lab architecture, telemetry sources, attack simulations, detection engineering, SSH and RDP investigations, incident automation, dashboard monitoring, findings, and lessons learned.
+
 Project Overview
 
 This project demonstrates an end-to-end SOC monitoring and investigation workflow:
