@@ -327,14 +327,15 @@ Custom threshold-based Elastic Security rules were used to identify repeated SSH
 | Rule name | `SOC ssh brute force` |
 | Platform | Ubuntu / Linux |
 | Data source | SSH authentication telemetry |
-| Threshold | Five or more matching failed SSH authentication events |
+| Threshold | `5` or more matching failed SSH authentication events |
+| Grouping | `user.name` and `source.ip` |
 | Purpose | Identify repeated failed SSH authentication attempts |
 
 Repeated controlled failures reached the configured detection condition and generated an alert. The execution history confirms that the enabled rule ran successfully and processed the available telemetry.
 
 ![Figure 10 — SSH brute-force rule definition](evidence/detections/ssh-rule-definition.png)
 
-*Figure 10 — Elastic Security definition for the `SOC ssh brute force` rule, configured to alert on five or more matching failed SSH authentication events.*
+*Figure 10 — Elastic Security definition for the `SOC ssh brute force` rule, configured to alert on `5` or more matching failed SSH authentication events grouped by `user.name` and `source.ip`.*
 
 [View full-size evidence](evidence/detections/ssh-rule-definition.png)
 
@@ -352,15 +353,15 @@ Repeated controlled failures reached the configured detection condition and gene
 | Platform | Windows |
 | Data source | Windows authentication / RDP-related telemetry |
 | Event filter | Windows Event ID `4625` (failed logon) |
-| Threshold | Two or more matching failed-authentication events |
-| Grouping | Source IP and username |
+| Threshold | `2` or more matching failed-authentication events |
+| Grouping | `source.ip` and `user.name` |
 | Purpose | Identify repeated failed RDP authentication attempts |
 
 The rule identified the controlled RDP authentication activity. One Elastic alert snapshot showed **444 medium-severity alerts**, including **440 alerts** attributed to `win Rdp brute force`. This confirmed detection coverage but also exposed a need for tuning.
 
 ![Figure 12 — RDP brute-force rule definition](evidence/detections/rdp-rule-definition.png)
 
-*Figure 12 — Elastic Security definition for the `win Rdp brute force` rule, matching Windows Event ID `4625` and alerting on two or more failed-authentication events grouped by source IP and username.*
+*Figure 12 — Elastic Security definition for the `win Rdp brute force` rule, matching Windows Event ID `4625` and alerting on `2` or more failed-authentication events grouped by `source.ip` and `user.name`.*
 
 [View full-size evidence](evidence/detections/rdp-rule-definition.png)
 
@@ -718,9 +719,9 @@ One Elastic snapshot showed 444 medium-severity alerts, with 440 attributed to t
 
 ### 13.2 Tuning Opportunities
 
-- Validate the SSH threshold of five failed events and the RDP threshold of two failed events against both attack simulations and normal activity.
+- Validate the SSH threshold of `5` failed events grouped by `user.name` and `source.ip` against both attack simulations and normal activity.
+- Validate the RDP threshold of `2` failed events grouped by `source.ip` and `user.name` against both attack simulations and normal activity.
 - Review each rule's detection window and interval.
-- Group related events by source IP and username.
 - Suppress repetitive alerts representing the same incident.
 - Account for expected administrative behavior.
 - Retest tuned rules against known simulated attacks and normal activity.
