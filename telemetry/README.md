@@ -56,39 +56,50 @@ The Fleet view shows the enrolled agents and their health status.
 
 This shows the Windows telemetry integrations configured in the Elastic Agent policy.
 
-## Telemetry Flow
+## Telemetry and Fleet Management Flow
+
+Fleet management and endpoint telemetry use separate logical paths.
+
+### Telemetry Data Plane
 
 ```text
-Windows Endpoint
-    ├── Sysmon
-    ├── Windows Event Logs
-    └── Microsoft Defender
-             │
-             ▼
-        Elastic Agent
-             │
-             ▼
-       Fleet Server
-             │
-             ▼
-      Elasticsearch
-             │
-             ▼
-        Kibana / SIEM
+Windows endpoint                         Ubuntu endpoint
+  ├── Windows Security events              ├── Linux system logs
+  ├── Sysmon events                        ├── Authentication logs
+  └── Microsoft Defender events            └── SSH events
+             │                                        │
+             ▼                                        ▼
+    Windows Elastic Agent                     Ubuntu Elastic Agent
+             │                                        │
+             └───────────────┬────────────────────────┘
+                             │ Endpoint telemetry
+                             ▼
+                       Elasticsearch
+                             │
+                             ▼
+                  Kibana / Elastic Security
+                    ├── Search and dashboards
+                    ├── Detection rules and alerts
+                    └── Investigation
+```
 
-Ubuntu Endpoint
-    ├── System Logs
-    ├── Authentication Logs
-    └── SSH Logs
-             │
-             ▼
-        Elastic Agent
-             │
-             ▼
-       Fleet Server
-             │
-             ▼
-      Elasticsearch
-             │
-             ▼
-        Kibana / SIEM
+### Fleet Management Plane
+
+```text
+Kibana Fleet UI
+      │ Stores policies and actions
+      ▼
+Elasticsearch Fleet indices
+      ▲
+      │ Fleet Server monitors and updates Fleet state
+      ▼
+Fleet Server
+      ▲
+      │ Agents initiate HTTPS enrollment and check-ins
+      ▼
+Windows and Ubuntu Elastic Agents
+      └── Policy retrieval, actions, status, health,
+          and lifecycle management
+```
+
+Fleet Server manages Elastic Agents and their policies. It is not the endpoint-telemetry relay, the telemetry store, or the security-analysis engine.

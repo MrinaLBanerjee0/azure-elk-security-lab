@@ -58,3 +58,4 @@ Elastic Security Alert
 Investigation
         ↓
 Automated Ticketing
+```

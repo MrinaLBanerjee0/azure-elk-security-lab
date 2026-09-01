@@ -44,3 +44,4 @@ osTicket API
 Incident Ticket Created
         ↓
 SOC Analyst Investigation
+```
