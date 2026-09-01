@@ -327,11 +327,16 @@ Custom threshold-based Elastic Security rules were used to identify repeated SSH
 | Rule name | `SOC ssh brute force` |
 | Platform | Ubuntu / Linux |
 | Data source | SSH authentication telemetry |
+| Threshold | Five or more matching failed SSH authentication events |
 | Purpose | Identify repeated failed SSH authentication attempts |
 
 Repeated controlled failures reached the configured detection condition and generated an alert. The execution history confirms that the enabled rule ran successfully and processed the available telemetry.
 
-> **Evidence gap — Figure 10:** The repository does not currently contain a screenshot of the SSH rule-definition or edit-settings page. Capture the rule overview showing its query, threshold, grouping fields, interval, and risk settings before publishing a configuration figure. The execution evidence below must not be described as the rule definition.
+![Figure 10 — SSH brute-force rule definition](evidence/detections/ssh-rule-definition.png)
+
+*Figure 10 — Elastic Security definition for the `SOC ssh brute force` rule, configured to alert on five or more matching failed SSH authentication events.*
+
+[View full-size evidence](evidence/detections/ssh-rule-definition.png)
 
 ![Figure 11 — SSH rule execution](evidence/detections/ssh-rule-execution.png)
 
@@ -346,11 +351,18 @@ Repeated controlled failures reached the configured detection condition and gene
 | Rule name | `win Rdp brute force` |
 | Platform | Windows |
 | Data source | Windows authentication / RDP-related telemetry |
+| Event filter | Windows Event ID `4625` (failed logon) |
+| Threshold | Two or more matching failed-authentication events |
+| Grouping | Source IP and username |
 | Purpose | Identify repeated failed RDP authentication attempts |
 
 The rule identified the controlled RDP authentication activity. One Elastic alert snapshot showed **444 medium-severity alerts**, including **440 alerts** attributed to `win Rdp brute force`. This confirmed detection coverage but also exposed a need for tuning.
 
-> **Evidence gap — Figure 12:** The repository does not currently contain a screenshot of the RDP rule-definition or edit-settings page. Capture the rule overview showing its query, threshold, grouping fields, interval, and risk settings before publishing a configuration figure. The execution evidence below must not be described as the rule definition.
+![Figure 12 — RDP brute-force rule definition](evidence/detections/rdp-rule-definition.png)
+
+*Figure 12 — Elastic Security definition for the `win Rdp brute force` rule, matching Windows Event ID `4625` and alerting on two or more failed-authentication events grouped by source IP and username.*
+
+[View full-size evidence](evidence/detections/rdp-rule-definition.png)
 
 ![Figure 13 — RDP rule execution](evidence/detections/rdp-rule-execution.png)
 
@@ -706,7 +718,7 @@ One Elastic snapshot showed 444 medium-severity alerts, with 440 attributed to t
 
 ### 13.2 Tuning Opportunities
 
-- Adjust SSH and RDP thresholds.
+- Validate the SSH threshold of five failed events and the RDP threshold of two failed events against both attack simulations and normal activity.
 - Review each rule's detection window and interval.
 - Group related events by source IP and username.
 - Suppress repetitive alerts representing the same incident.
@@ -748,7 +760,6 @@ A useful detection should identify meaningful suspicious behavior without creati
 - The Mythic evidence does not conclusively demonstrate a successful callback.
 - Detection rules were functional but not fully tuned for production-scale alert volume.
 - Some attribution required correlation across source IP, username, host, and timestamp.
-- The repository does not yet contain the rule-definition screenshots required for Figures 10 and 12.
 
 ---
 
@@ -870,9 +881,9 @@ The report is supported by screenshot evidence stored in the repository's `evide
 | 7 | `evidence/attack-simulation/rdp-reconnaissance.png` | Embedded |
 | 8 | `evidence/attack-simulation/rdp-bruteforce-attempt.png` | Embedded |
 | 9 | `evidence/attack-simulation/mythic-c2-profile.png` | Embedded |
-| 10 | Not currently present | SSH rule-definition screenshot required |
+| 10 | `evidence/detections/ssh-rule-definition.png` | Embedded |
 | 11 | `evidence/detections/ssh-rule-execution.png` | Embedded |
-| 12 | Not currently present | RDP rule-definition screenshot required |
+| 12 | `evidence/detections/rdp-rule-definition.png` | Embedded |
 | 13 | `evidence/detections/rdp-rule-execution.png` | Embedded |
 | 14 | `evidence/detections/ssh-alert.png` | Embedded |
 | 15 | `evidence/investigations/ssh-event-detail.png` | Embedded |
