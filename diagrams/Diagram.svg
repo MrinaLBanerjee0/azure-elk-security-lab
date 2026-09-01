@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1240" viewBox="0 0 1800 1240" role="img" aria-labelledby="title desc">
+  <title id="title">Azure ELK SOC Lab Architecture</title>
+  <desc id="desc">Evidence-backed architecture showing three Azure virtual networks, six virtual machines, Elastic telemetry and Fleet control planes, controlled SSH and RDP testing, osTicket automation, and an unconfirmed Mythic callback path.</desc>
+
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="1" stop-color="#eef4fb"/>
+    </linearGradient>
+    <linearGradient id="azure" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f5faff"/>
+      <stop offset="1" stop-color="#eaf4ff"/>
+    </linearGradient>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#15803d"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d97706"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrowPurpleStart" markerWidth="10" markerHeight="10" refX="1" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M10,0 L0,5 L10,10 z" fill="#7c3aed"/>
+    </marker>
+    <style>
+      .title { font: 800 42px Inter, Segoe UI, Arial, sans-serif; fill: #0f2744; letter-spacing: 1px; }
+      .subtitle { font: 500 20px Inter, Segoe UI, Arial, sans-serif; fill: #486581; }
+      .actor-title { font: 700 20px Inter, Segoe UI, Arial, sans-serif; fill: #102a43; }
+      .actor-sub { font: 500 15px Inter, Segoe UI, Arial, sans-serif; fill: #52667a; }
+      .azure-title { font: 800 24px Inter, Segoe UI, Arial, sans-serif; fill: #0067b8; }
+      .vnet-title { font: 800 21px Inter, Segoe UI, Arial, sans-serif; fill: #102a43; }
+      .vnet-sub { font: 500 14px Inter, Segoe UI, Arial, sans-serif; fill: #64748b; }
+      .card-title { font: 750 20px Inter, Segoe UI, Arial, sans-serif; fill: #ffffff; }
+      .card-ip { font: 700 15px ui-monospace, SFMono-Regular, Consolas, monospace; fill: #dbeafe; }
+      .body { font: 500 15px Inter, Segoe UI, Arial, sans-serif; fill: #243b53; }
+      .body-strong { font: 700 15px Inter, Segoe UI, Arial, sans-serif; fill: #102a43; }
+      .small { font: 500 13px Inter, Segoe UI, Arial, sans-serif; fill: #52667a; }
+      .flow-label { font: 700 13px Inter, Segoe UI, Arial, sans-serif; paint-order: stroke; stroke: #f8fbff; stroke-width: 5px; stroke-linejoin: round; }
+      .pipeline-title { font: 800 20px Inter, Segoe UI, Arial, sans-serif; fill: #102a43; }
+      .pipeline-text { font: 700 14px Inter, Segoe UI, Arial, sans-serif; fill: #243b53; }
+      .legend { font: 600 13px Inter, Segoe UI, Arial, sans-serif; fill: #334e68; }
+    </style>
+  </defs>
+
+  <rect width="1800" height="1240" fill="url(#page)"/>
+
+  <text x="900" y="58" text-anchor="middle" class="title">AZURE ELK SOC LAB ARCHITECTURE</text>
+  <text x="900" y="94" text-anchor="middle" class="subtitle">Evidence-backed topology, telemetry, detection, investigation, and incident automation</text>
+
+  <!-- External access and controlled testing -->
+  <g>
+    <rect x="640" y="118" width="520" height="82" rx="16" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+    <circle cx="688" cy="159" r="25" fill="#0f2744"/>
+    <text x="688" y="166" text-anchor="middle" font-family="Inter, Segoe UI, Arial" font-size="18" font-weight="800" fill="#ffffff">SOC</text>
+    <text x="728" y="151" class="actor-title">SOC analyst workstation</text>
+    <text x="728" y="177" class="actor-sub">Browser access to Kibana / Elastic Security</text>
+
+    <rect x="1325" y="118" width="420" height="82" rx="16" fill="#fffaf0" stroke="#d97706" stroke-width="2"/>
+    <circle cx="1372" cy="159" r="25" fill="#b45309"/>
+    <text x="1372" y="166" text-anchor="middle" font-family="Inter, Segoe UI, Arial" font-size="18" font-weight="800" fill="#ffffff">K</text>
+    <text x="1411" y="151" class="actor-title">Authorized Kali test host</text>
+    <text x="1411" y="177" class="actor-sub">RDP reconnaissance / failed-auth testing</text>
+  </g>
+
+  <!-- Azure boundary -->
+  <rect x="30" y="225" width="1740" height="665" rx="26" fill="url(#azure)" stroke="#0078d4" stroke-width="3"/>
+  <rect x="58" y="240" width="242" height="42" rx="12" fill="#0078d4"/>
+  <text x="179" y="269" text-anchor="middle" font-family="Inter, Segoe UI, Arial" font-size="22" font-weight="800" fill="#ffffff">MICROSOFT AZURE</text>
+  <text x="325" y="267" class="azure-title">Multi-region hub-and-spoke SOC lab</text>
+
+  <!-- VNet containers: Ubuntu spoke, Elastic hub, Windows spoke -->
+  <g>
+    <rect x="70" y="310" width="500" height="520" rx="22" fill="#ffffff" stroke="#0284c7" stroke-width="3"/>
+    <rect x="70" y="310" width="500" height="58" rx="20" fill="#e0f2fe"/>
+    <path d="M70 348 H570" stroke="#0284c7" stroke-width="3"/>
+    <text x="95" y="339" class="vnet-title">ubuntu-vnet</text>
+    <text x="95" y="359" class="vnet-sub">10.1.0.0/16 · default 10.1.0.0/24 · Japan West</text>
+
+    <rect x="650" y="310" width="500" height="520" rx="22" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+    <rect x="650" y="310" width="500" height="58" rx="20" fill="#dcfce7"/>
+    <path d="M650 348 H1150" stroke="#16a34a" stroke-width="3"/>
+    <text x="675" y="339" class="vnet-title">elaskiba-vnet · monitoring hub</text>
+    <text x="675" y="359" class="vnet-sub">10.0.0.0/16 · default 10.0.0.0/24 · Korea Central</text>
+
+    <rect x="1230" y="310" width="500" height="520" rx="22" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
+    <rect x="1230" y="310" width="500" height="58" rx="20" fill="#ede9fe"/>
+    <path d="M1230 348 H1730" stroke="#7c3aed" stroke-width="3"/>
+    <text x="1255" y="339" class="vnet-title">win-vnet</text>
+    <text x="1255" y="359" class="vnet-sub">10.2.0.0/16 · default 10.2.0.0/24 · Japan East</text>
+  </g>
+
+  <!-- Verified VNet peerings -->
+  <path d="M570 332 H650" fill="none" stroke="#7c3aed" stroke-width="5" marker-start="url(#arrowPurpleStart)" marker-end="url(#arrowPurple)"/>
+  <text x="610" y="302" text-anchor="middle" class="flow-label" fill="#6d28d9">VNet peering</text>
+  <path d="M1150 332 H1230" fill="none" stroke="#7c3aed" stroke-width="5" marker-start="url(#arrowPurpleStart)" marker-end="url(#arrowPurple)"/>
+  <text x="1190" y="302" text-anchor="middle" class="flow-label" fill="#6d28d9">VNet peering</text>
+
+  <!-- Ubuntu endpoint card -->
+  <g>
+    <rect x="95" y="390" width="450" height="205" rx="16" fill="#f8fafc" stroke="#0284c7" stroke-width="2"/>
+    <path d="M95 406 Q95 390 111 390 H529 Q545 390 545 406 V444 H95 Z" fill="#0369a1"/>
+    <text x="120" y="424" class="card-title">Ubuntu endpoint</text>
+    <text x="520" y="424" text-anchor="end" class="card-ip">10.1.0.4</text>
+    <text x="120" y="474" class="body-strong">Elastic Agent telemetry source</text>
+    <text x="120" y="501" class="body">• Linux system logs</text>
+    <text x="120" y="526" class="body">• Authentication and SSH events</text>
+    <text x="120" y="551" class="body">• Failed / accepted outcome context</text>
+    <rect x="120" y="566" width="188" height="24" rx="12" fill="#dcfce7"/>
+    <text x="214" y="583" text-anchor="middle" class="small" fill="#166534">Monitored endpoint</text>
+  </g>
+
+  <!-- osTicket card -->
+  <g>
+    <rect x="95" y="625" width="450" height="165" rx="16" fill="#fffaf0" stroke="#d97706" stroke-width="2"/>
+    <path d="M95 641 Q95 625 111 625 H529 Q545 625 545 641 V679 H95 Z" fill="#b45309"/>
+    <text x="120" y="659" class="card-title">myVm · osTicket</text>
+    <text x="520" y="659" text-anchor="end" class="card-ip">10.1.0.5</text>
+    <text x="120" y="709" class="body">• Incident-management server</text>
+    <text x="120" y="734" class="body">• Receives Elastic webhook / API tickets</text>
+    <text x="120" y="759" class="body">• Confirmed SSH test source to 10.1.0.4</text>
+  </g>
+
+  <!-- Elasticsearch/Kibana card -->
+  <g>
+    <rect x="675" y="390" width="450" height="205" rx="16" fill="#f7fef9" stroke="#16a34a" stroke-width="2"/>
+    <path d="M675 406 Q675 390 691 390 H1109 Q1125 390 1125 406 V444 H675 Z" fill="#15803d"/>
+    <text x="700" y="424" class="card-title">Elaskiba · Elasticsearch + Kibana</text>
+    <text x="1100" y="424" text-anchor="end" class="card-ip">10.0.0.4</text>
+    <text x="700" y="474" class="body">• Store and index Windows / Linux telemetry</text>
+    <text x="700" y="499" class="body">• Elastic Security rules and alerts</text>
+    <text x="700" y="524" class="body">• Search, triage, investigation, dashboards</text>
+    <text x="700" y="549" class="body">• SSH threshold: 5 · RDP threshold: 2</text>
+    <rect x="700" y="566" width="198" height="24" rx="12" fill="#dbeafe"/>
+    <text x="799" y="583" text-anchor="middle" class="small" fill="#1d4ed8">SOC analysis plane</text>
+  </g>
+
+  <!-- Fleet card -->
+  <g>
+    <rect x="675" y="625" width="450" height="165" rx="16" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <path d="M675 641 Q675 625 691 625 H1109 Q1125 625 1125 641 V679 H675 Z" fill="#166534"/>
+    <text x="700" y="659" class="card-title">Fleet Server</text>
+    <text x="1100" y="659" text-anchor="end" class="card-ip">10.0.0.5</text>
+    <text x="700" y="709" class="body">• Agent enrollment, policies, integrations</text>
+    <text x="700" y="734" class="body">• Agent health and management</text>
+    <text x="700" y="759" class="body-strong">Not a telemetry relay or analysis engine</text>
+  </g>
+
+  <!-- Windows endpoint card -->
+  <g>
+    <rect x="1255" y="390" width="450" height="205" rx="16" fill="#faf8ff" stroke="#7c3aed" stroke-width="2"/>
+    <path d="M1255 406 Q1255 390 1271 390 H1689 Q1705 390 1705 406 V444 H1255 Z" fill="#6d28d9"/>
+    <text x="1280" y="424" class="card-title">Windows endpoint · win</text>
+    <text x="1680" y="424" text-anchor="end" class="card-ip">10.2.0.4</text>
+    <text x="1280" y="474" class="body-strong">Elastic Agent telemetry source</text>
+    <text x="1280" y="501" class="body">• Windows Security / failed logons</text>
+    <text x="1280" y="526" class="body">• Sysmon process telemetry</text>
+    <text x="1280" y="551" class="body">• Microsoft Defender events</text>
+    <rect x="1280" y="566" width="188" height="24" rx="12" fill="#dcfce7"/>
+    <text x="1374" y="583" text-anchor="middle" class="small" fill="#166534">Monitored endpoint</text>
+  </g>
+
+  <!-- Mythic card -->
+  <g>
+    <rect x="1255" y="625" width="450" height="165" rx="16" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+    <path d="M1255 641 Q1255 625 1271 625 H1689 Q1705 625 1705 641 V679 H1255 Z" fill="#475569"/>
+    <text x="1280" y="659" class="card-title">Mythic C2 test server</text>
+    <text x="1680" y="659" text-anchor="end" class="card-ip">10.2.0.5</text>
+    <text x="1280" y="709" class="body">• HTTP C2 profile configured</text>
+    <text x="1280" y="734" class="body">• Apollo Windows payload generated</text>
+    <rect x="1280" y="750" width="325" height="26" rx="13" fill="#fee2e2"/>
+    <text x="1442" y="768" text-anchor="middle" class="small" fill="#b91c1c">Active callback / session not confirmed</text>
+  </g>
+
+  <!-- Confirmed and unconfirmed flows -->
+  <path d="M320 625 V595" fill="none" stroke="#d97706" stroke-width="5" marker-end="url(#arrowOrange)"/>
+  <text x="337" y="615" class="flow-label" fill="#b45309">SSH failures · TCP 22</text>
+
+  <path d="M900 200 V390" fill="none" stroke="#0f2744" stroke-width="5" marker-end="url(#arrowGray)"/>
+  <text x="917" y="241" class="flow-label" fill="#0f2744">Kibana web UI</text>
+
+  <path d="M1535 200 V390" fill="none" stroke="#d97706" stroke-width="5" marker-end="url(#arrowOrange)"/>
+  <text x="1552" y="242" class="flow-label" fill="#b45309">RDP recon / failed attempts · TCP 3389</text>
+
+  <path d="M1480 625 V595" fill="none" stroke="#64748b" stroke-width="5" stroke-dasharray="11 8" marker-end="url(#arrowGray)"/>
+  <text x="1497" y="617" class="flow-label" fill="#475569">Intended Apollo callback path</text>
+
+  <!-- Telemetry data plane -->
+  <path d="M545 474 H675" fill="none" stroke="#15803d" stroke-width="6" marker-end="url(#arrowGreen)"/>
+  <text x="610" y="461" text-anchor="middle" class="flow-label" fill="#166534">Linux telemetry</text>
+  <path d="M1255 505 H1125" fill="none" stroke="#15803d" stroke-width="6" marker-end="url(#arrowGreen)"/>
+  <text x="1190" y="492" text-anchor="middle" class="flow-label" fill="#166534">Windows telemetry</text>
+
+  <!-- Fleet control plane -->
+  <path d="M675 704 H610 V550 H545" fill="none" stroke="#2563eb" stroke-width="5" stroke-dasharray="10 7" marker-end="url(#arrowBlue)"/>
+  <text x="610" y="691" text-anchor="middle" class="flow-label" fill="#1d4ed8">Fleet control plane</text>
+  <path d="M1125 704 H1190 V550 H1255" fill="none" stroke="#2563eb" stroke-width="5" stroke-dasharray="10 7" marker-end="url(#arrowBlue)"/>
+  <text x="1190" y="691" text-anchor="middle" class="flow-label" fill="#1d4ed8">Fleet control plane</text>
+
+  <!-- Alert to ticket automation -->
+  <path d="M675 570 H610 V718 H545" fill="none" stroke="#dc2626" stroke-width="5" marker-end="url(#arrowRed)"/>
+  <text x="610" y="706" text-anchor="middle" class="flow-label" fill="#b91c1c">Webhook / API ticket</text>
+
+  <!-- Network truth note -->
+  <rect x="450" y="842" width="900" height="34" rx="17" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="900" y="864" text-anchor="middle" class="small" fill="#334155">No direct ubuntu-vnet ↔ win-vnet peering is evidenced; standard VNet peering is non-transitive.</text>
+
+  <!-- Evidence-backed workflow -->
+  <rect x="30" y="920" width="1740" height="168" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="70" y="958" class="pipeline-title">EVIDENCE-BACKED SOC WORKFLOW</text>
+
+  <g>
+    <rect x="70" y="980" width="205" height="66" rx="14" fill="#fff7ed" stroke="#d97706" stroke-width="2"/>
+    <text x="172" y="1008" text-anchor="middle" class="pipeline-text">Controlled activity</text>
+    <text x="172" y="1030" text-anchor="middle" class="small">SSH / RDP testing</text>
+
+    <rect x="330" y="980" width="205" height="66" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="432" y="1008" text-anchor="middle" class="pipeline-text">Endpoint telemetry</text>
+    <text x="432" y="1030" text-anchor="middle" class="small">Elastic Agent</text>
+
+    <rect x="590" y="980" width="205" height="66" rx="14" fill="#ecfdf5" stroke="#15803d" stroke-width="2"/>
+    <text x="692" y="1008" text-anchor="middle" class="pipeline-text">Elasticsearch</text>
+    <text x="692" y="1030" text-anchor="middle" class="small">Store and index</text>
+
+    <rect x="850" y="980" width="205" height="66" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="952" y="1008" text-anchor="middle" class="pipeline-text">Elastic Security</text>
+    <text x="952" y="1030" text-anchor="middle" class="small">Rule → alert</text>
+
+    <rect x="1110" y="980" width="205" height="66" rx="14" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="1212" y="1008" text-anchor="middle" class="pipeline-text">Investigation</text>
+    <text x="1212" y="1030" text-anchor="middle" class="small">Triage and correlation</text>
+
+    <rect x="1370" y="980" width="205" height="66" rx="14" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+    <text x="1472" y="1008" text-anchor="middle" class="pipeline-text">osTicket incident</text>
+    <text x="1472" y="1030" text-anchor="middle" class="small">Automated API ticket</text>
+
+    <path d="M275 1013 H330" stroke="#64748b" stroke-width="4" marker-end="url(#arrowGray)"/>
+    <path d="M535 1013 H590" stroke="#64748b" stroke-width="4" marker-end="url(#arrowGray)"/>
+    <path d="M795 1013 H850" stroke="#64748b" stroke-width="4" marker-end="url(#arrowGray)"/>
+    <path d="M1055 1013 H1110" stroke="#64748b" stroke-width="4" marker-end="url(#arrowGray)"/>
+    <path d="M1315 1013 H1370" stroke="#64748b" stroke-width="4" marker-end="url(#arrowGray)"/>
+  </g>
+
+  <!-- Legend and evidence note -->
+  <text x="70" y="1133" class="pipeline-title">LINE LEGEND</text>
+  <line x1="70" y1="1162" x2="145" y2="1162" stroke="#15803d" stroke-width="6" marker-end="url(#arrowGreen)"/>
+  <text x="162" y="1167" class="legend">Telemetry data plane</text>
+  <line x1="360" y1="1162" x2="435" y2="1162" stroke="#2563eb" stroke-width="5" stroke-dasharray="10 7" marker-end="url(#arrowBlue)"/>
+  <text x="452" y="1167" class="legend">Fleet management plane</text>
+  <line x1="680" y1="1162" x2="755" y2="1162" stroke="#dc2626" stroke-width="5" marker-end="url(#arrowRed)"/>
+  <text x="772" y="1167" class="legend">Alert-to-ticket API</text>
+  <line x1="990" y1="1162" x2="1065" y2="1162" stroke="#d97706" stroke-width="5" marker-end="url(#arrowOrange)"/>
+  <text x="1082" y="1167" class="legend">Controlled test activity</text>
+  <line x1="1310" y1="1162" x2="1385" y2="1162" stroke="#64748b" stroke-width="5" stroke-dasharray="11 8" marker-end="url(#arrowGray)"/>
+  <text x="1402" y="1167" class="legend">Configured path; outcome unconfirmed</text>
+
+  <text x="900" y="1210" text-anchor="middle" class="small">Public IPs, credentials, tokens, callback keys, and personal identifiers are intentionally omitted.</text>
+</svg>
