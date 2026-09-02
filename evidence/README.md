@@ -64,7 +64,7 @@ The PDF-derived evidence identifies myVm (`10.1.0.5`) as the controlled SSH sour
 | --- | --- | --- | --- |
 | A webhook connector was configured | [Connector configuration](automation/osticket-connector-configuration.png) | Connector name, POST method, endpoint, and header configuration were present | The screenshot does not expose or validate the API-key value |
 | Elastic could reach the ticket API | [Connector test](automation/osticket-connector-test-success.png) | The osTicket connector test returned success | Does not test retries, failure handling, or secret rotation |
-| Security tickets existed in osTicket | [Ticket list](automation/osticket-ticket-list.png) | SSH and RDP-labelled incidents were present | Does not prove assignment, SLA, or complete closure workflow |
+| Security tickets existed in osTicket | [Ticket list](automation/osticket-ticket-list.png) | SSH and historically RDP-labelled tickets were present | Does not prove assignment, SLA, or closure |
 | A historically RDP-labelled ticket was created | [Windows API ticket](automation/rdp-api-ticket.png) | The API created a ticket with the historical rule name and basic investigation message | The ticket does not prove RDP specificity or enriched alert context |
 | An SSH ticket was created | [SSH API ticket](automation/ssh-api-ticket.png) | The API created a ticket with the SSH rule name and basic investigation message | Does not prove enrichment or downstream response actions |
 
@@ -76,7 +76,7 @@ The PDF-derived evidence identifies myVm (`10.1.0.5`) as the controlled SSH sour
 | SSH failures were trended | [Failures over time](dashboards/ssh-failures-over-time.png) | Failed SSH events were visualized across time | Does not measure detection quality by itself |
 | Top SSH sources were ranked | [Top source IPs](dashboards/top-source-ip-visualization.png) | High-volume source addresses were visualized | Source IP alone does not establish actor identity |
 
-## Reusable Artifact Corroboration
+## Exported Configuration Artifact Corroboration
 
 - [Rules and connector export](../artifacts/detections/custom-rules-and-osticket-connector.sanitized.ndjson): exact historical rule logic with only the API-key value redacted.
 - [Dashboard export](../artifacts/dashboards/elk-soc-monitoring-dashboard.ndjson): real Kibana saved objects using `logs-*`.
@@ -96,7 +96,7 @@ The PDF-derived evidence identifies myVm (`10.1.0.5`) as the controlled SSH sour
 | Successful RDP authentication | **Not confirmed** |
 | Active Mythic/Apollo callback | **Not confirmed** |
 | Production-ready detection tuning | **Not demonstrated** |
-| Reproducible configuration exports | **Not yet included** |
+| Exported configuration artifacts | **Included; Fleet policy files are evidence snapshots, not clean import packages** |
 
 ## Publication and Handling
 

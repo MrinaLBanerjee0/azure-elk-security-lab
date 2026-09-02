@@ -1,12 +1,12 @@
 # Azure ELK SOC
 
-## Security Monitoring, Detection, Investigation & Incident Response Report
+## Security Monitoring, Detection, Investigation & Ticketing Report
 
 **Project:** Azure ELK Security Lab  
 **Environment:** Microsoft Azure  
 **SIEM:** Elastic Stack / Kibana  
 **Monitored endpoints:** Windows and Ubuntu  
-**Incident management:** osTicket  
+**Ticketing:** osTicket  
 **Report date:** August 2026
 
 > This report documents a controlled security-learning environment. All attack activity was intentionally generated inside the lab. No production systems, external users, or third-party systems were targeted.
@@ -23,7 +23,7 @@
 - [8. Investigation Case 1 — Ubuntu SSH Brute Force](#8-investigation-case-1--ubuntu-ssh-brute-force)
 - [9. Investigation Case 2 — Windows Failed-Logon Alert in RDP Test Context](#9-investigation-case-2--windows-failed-logon-alert-in-rdp-test-context)
 - [10. Alert Triage and Correlation](#10-alert-triage-and-correlation)
-- [11. Automated osTicket Incident Creation](#11-automated-osticket-incident-creation)
+- [11. Automated osTicket Ticket Creation](#11-automated-osticket-ticket-creation)
 - [12. SOC Dashboard and Monitoring](#12-soc-dashboard-and-monitoring)
 - [13. Detection Tuning](#13-detection-tuning)
 - [14. Key Findings](#14-key-findings)
@@ -37,13 +37,13 @@
 
 ## 1. Executive Summary
 
-This project demonstrates a practical Security Operations Center (SOC) environment built in Microsoft Azure using the Elastic Stack. The lab contained six virtual machines supporting Elasticsearch and Kibana, Fleet Server, Windows and Ubuntu log sources, osTicket incident management, and Mythic C2 testing. Azure VNet peering enabled communication between systems deployed across separate virtual networks and regions.
+This project demonstrates a practical Security Operations Center (SOC) environment built in Microsoft Azure using the Elastic Stack. The lab contained six virtual machines supporting Elasticsearch and Kibana, Fleet Server, Windows and Ubuntu log sources, osTicket ticketing, and Mythic C2 testing. Azure VNet peering enabled communication between systems deployed across separate virtual networks and regions.
 
 The Windows and Ubuntu virtual machines were the primary security telemetry sources. Elastic Agent was installed on both endpoints and managed through Fleet Server. The Windows endpoint provided Windows authentication, Sysmon, Microsoft Defender, and RDP-related events. The Ubuntu endpoint provided Linux system and SSH authentication logs. This telemetry was centralized in Elasticsearch and analyzed through Kibana and Elastic Security.
 
 A Kali Linux system was used to generate controlled failed-login activity. SSH authentication attempts targeted the Ubuntu VM, while RDP reconnaissance and authentication testing targeted the Windows VM. Threshold-based Elastic Security rules identified repeated failed-login activity and generated alerts.
 
-The related alerts were investigated by reviewing source IP addresses, usernames, affected hosts, authentication outcomes, event counts, timestamps, and surrounding activity. Elastic was also integrated with osTicket through a webhook/API workflow so that detections could generate incident tickets automatically. Kibana dashboards were created to summarize authentication failures and high-volume source addresses.
+The related alerts were investigated by reviewing source IP addresses, usernames, affected hosts, authentication outcomes, event counts, timestamps, and surrounding activity. Elastic was also integrated with osTicket through a webhook/API workflow so that detections could generate basic tickets automatically. Kibana dashboards were created to summarize SSH authentication failures and top SSH source addresses.
 
 The lab additionally included Mythic and Apollo configuration for controlled C2 testing. The evidence confirms C2 profile configuration and payload creation, but it does **not** conclusively demonstrate a successful active callback. Likewise, the RDP brute-force test did **not** identify valid credentials or establish authenticated access.
 
@@ -64,7 +64,7 @@ Security Alerts
         ↓
 Investigation and Correlation
         ↓
-Automatic osTicket Incident
+Automatic osTicket Ticket
         ↓
 Kibana Dashboard and Detection Tuning
 ```
@@ -81,7 +81,7 @@ The project scope was to build a cloud-based SOC learning environment in Microso
 - Elastic Fleet Server
 - A Windows monitored endpoint
 - An Ubuntu monitored endpoint
-- An osTicket incident-management server
+- An osTicket ticketing server
 - A Mythic C2 server
 
 The Windows endpoint generated Windows security, authentication, Sysmon, Defender, and RDP-related telemetry. The Ubuntu endpoint generated Linux system and SSH authentication logs. Elastic Agent collected endpoint data, Fleet Server managed the agents and policies, Elasticsearch stored and indexed the telemetry, and Kibana and Elastic Security supported searching, detection, alerting, investigation, and visualization.
@@ -100,7 +100,7 @@ The main objectives were to:
 - Create and validate threshold-based authentication detections.
 - Investigate alerts using source, user, host, timestamp, outcome, and event-count context.
 - Distinguish an attempted attack from confirmed successful access.
-- Automate osTicket incident creation from Elastic alerts.
+- Automate basic osTicket ticket creation from Elastic alerts.
 - Build Kibana visualizations for high-volume security data.
 - Practice the complete workflow from telemetry generation to detection, investigation, ticketing, monitoring, and tuning.
 
@@ -123,7 +123,7 @@ The SOC lab used six Azure virtual machines distributed across Korea Central, Ja
 | Elaskiba VM | `10.0.0.4` | Korea Central | Elasticsearch and Kibana; telemetry storage, search, detection, investigation, and dashboards |
 | Fleet Server VM | `10.0.0.5` | Korea Central | Elastic Agent enrollment, policy management, integrations, and health visibility |
 | Ubuntu VM | `10.1.0.4` | Japan West | Linux system and SSH authentication telemetry source |
-| MyVm | `10.1.0.5` | Japan West | osTicket incident-management server |
+| MyVm | `10.1.0.5` | Japan West | osTicket ticketing server |
 | Windows VM | `10.2.0.4` | Japan East | Windows authentication, Sysmon, Defender, and RDP telemetry source |
 | Mythic VM | `10.2.0.5` | Japan East | Mythic HTTP C2 profile and Apollo payload testing |
 
@@ -164,7 +164,7 @@ Windows VM                                             ├─→ Elasticsearch
                                                                ↓
                                               Detection → Alert → Investigation
                                                                ↓
-                                                Webhook → osTicket Incident
+                                                Webhook → osTicket Ticket
 
 Fleet Server ── manages endpoint agents, policies, and integrations
 Mythic VM ── HTTP C2 profile and Apollo payload testing against Windows VM
@@ -172,7 +172,7 @@ Mythic VM ── HTTP C2 profile and Apollo payload testing against Windows VM
 
 ### 3.5 Architecture Summary
 
-The final design provided a centralized, multi-platform SOC learning environment. Windows and Ubuntu operated as separate telemetry sources; Fleet Server managed the agents; Elasticsearch stored and indexed their data; and Kibana and Elastic Security supported search, detection, investigation, and visualization. osTicket provided incident tracking, while Mythic provided a controlled adversary-simulation component.
+The final design provided a centralized, multi-platform SOC learning environment. Windows and Ubuntu operated as separate telemetry sources; Fleet Server managed the agents; Elasticsearch stored and indexed their data; and Kibana and Elastic Security supported search, detection, investigation, and visualization. osTicket provided basic ticket tracking, while Mythic provided a controlled adversary-simulation component.
 
 ---
 
@@ -500,8 +500,8 @@ The evidence-supported sequence was:
 3. Elastic Agent forwarded the authentication telemetry.
 4. `SOC ssh brute force` generated an alert.
 5. Alert fields and related raw events were investigated.
-6. An osTicket incident was generated and reviewed.
-7. The controlled test was documented and the incident workflow completed.
+6. An osTicket API ticket was created and reviewed.
+7. The controlled test and ticketing result were documented; assignment, remediation, and ticket closure were not demonstrated.
 
 Exact timestamps should be transcribed from the source systems without silently normalizing time zones.
 
@@ -516,7 +516,7 @@ The repeated SSH failures were consistent with controlled failed-login activity 
 | Classification | Controlled SSH brute-force / failed-authentication simulation |
 | Detection status | Successfully detected |
 | Investigation status | Reviewed |
-| Escalation | Incident ticket generated in osTicket |
+| Ticketing | API ticket created in osTicket; assignment and closure were not demonstrated |
 | Final outcome | Detection and investigation workflow validated |
 
 ---
@@ -614,7 +614,7 @@ Reviewing source, user, timestamp, host, authentication result, and related even
 
 ---
 
-## 11. Automated osTicket Incident Creation
+## 11. Automated osTicket Ticket Creation
 
 Elastic Security was integrated with osTicket so that rule actions could create basic API tickets automatically.
 
@@ -718,7 +718,7 @@ A useful detection should identify meaningful suspicious behavior without creati
 | 7 | RDP compromise assessment | No valid credentials or authenticated access were confirmed. |
 | 8 | Investigation workflow | Alert fields and underlying raw events were reviewed and correlated. |
 | 9 | Ticket automation | Rule actions generated basic osTicket API tickets; full SOAR enrichment was not demonstrated. |
-| 10 | Dashboard monitoring | Authentication trends and top sources were visualized in Kibana. |
+| 10 | Dashboard monitoring | SSH authentication-failure trends and top SSH source IPs were visualized in Kibana. |
 | 11 | Detection tuning | High Windows failed-logon alert volume identified threshold and suppression improvements. |
 | 12 | Mythic testing | C2 profile and payload configuration were completed, but callback success was not confirmed. |
 
@@ -742,14 +742,11 @@ A useful detection should identify meaningful suspicious behavior without creati
 
 ### 16.1 Detection Improvements
 
-- Document the exact query, threshold, grouping fields, interval, and risk settings for each rule.
 - Add alert suppression for repeated events representing one incident.
 - Test detections against both attack simulations and expected administrative activity.
-- Preserve rule-definition screenshots or exported rule JSON as reproducible evidence.
 
 ### 16.2 Telemetry Improvements
 
-- Preserve and document the Sysmon configuration.
 - Expand Windows security-channel and Linux authentication coverage.
 - Validate field consistency across Windows and Ubuntu datasets.
 - Confirm that host, source, user, and outcome fields are available for investigation.
@@ -811,7 +808,7 @@ A large alert count does not automatically mean a detection is well designed. Th
 
 ### 17.6 Automation
 
-The osTicket integration showed how alert-driven ticket creation can reduce repetitive analyst work and create a trackable incident workflow.
+The osTicket integration showed how alert-driven ticket creation can reduce repetitive analyst work. The evidence proves ticket creation, not assignment, response, or closure.
 
 ### 17.7 Dashboard Monitoring
 
@@ -833,7 +830,7 @@ The Mythic component added C2 configuration and Apollo payload-testing experienc
 
 ```text
 Security Activity → Telemetry Collection → Centralized Logging
-        → Detection → Alert → Investigation → Incident Ticket
+        → Detection → Alert → Investigation → osTicket Ticket
         → Monitoring → Detection Improvement
 ```
 
@@ -874,8 +871,8 @@ The report is supported by screenshot evidence stored in the repository's `evide
 - **Attack simulation:** RDP reconnaissance, Crowbar testing, Mythic C2 profile, and payload creation
 - **Detections:** SSH and historically named Windows failed-logon execution history and alert evidence
 - **Investigations:** SSH event details, user/source pivots, and failed-authentication analysis
-- **Automation:** Connector validation and automatically generated osTicket incidents
-- **Dashboards:** Authentication trends, top sources, and the final SOC dashboard
+- **Automation:** Connector validation and automatically generated osTicket tickets
+- **Dashboards:** SSH authentication-failure trends, top SSH sources, and the final SOC dashboard
 
 ### 19.3 Evidence Handling
 
@@ -895,7 +892,7 @@ Before publishing new or replacement screenshots:
 - [Project overview](README.md)
 - [Environment](environment/)
 - [Telemetry](telemetry/)
-- [Reusable artifacts](artifacts/)
+- [Exported configuration artifacts](artifacts/)
 - [Attack simulation](attack-simulation/)
 - [Detections](detections/)
 - [Investigations](investigations/)

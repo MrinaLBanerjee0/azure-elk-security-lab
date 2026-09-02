@@ -2,7 +2,7 @@
 
 An evidence-backed SOC lab built in Microsoft Azure to demonstrate the analyst workflow from controlled security activity to centralized telemetry, custom detections, investigation, basic automated ticketing, and dashboard monitoring.
 
-[Read the full investigation report](SOC-INVESTIGATION-REPORT.md) · [Review the evidence index](evidence/) · [Inspect reusable artifacts](artifacts/) · [Open the editable architecture](diagrams/Diagram.svg)
+[Read the full investigation report](SOC-INVESTIGATION-REPORT.md) · [Review the evidence index](evidence/) · [Inspect exported artifacts](artifacts/) · [Open the editable architecture](diagrams/Diagram.svg)
 
 ## Recruiter Summary
 
@@ -70,9 +70,9 @@ Controlled Activity → Endpoint Telemetry → Elasticsearch
 - The dashboard export contains two `logs-*` panels: SSH failures over time and top SSH source IPs.
 - Mythic profile and payload creation were completed, but an active Apollo callback was not proven.
 
-## Reusable Artifacts
+## Exported Configuration Artifacts
 
-The [`artifacts/`](artifacts/) directory contains the real Kibana dashboard export, a credential-sanitized rules/connector export, Windows and Ubuntu applied Fleet-policy snapshots, and the third-party Sysmon configuration used in the lab. The API-key value is the only field changed in the sanitized NDJSON; the historical rule names, descriptions, queries, thresholds, schedules, grouping, and actions remain unchanged.
+The [`artifacts/`](artifacts/) directory contains the real Kibana dashboard export, a credential-sanitized rules/connector export, Windows and Ubuntu applied Fleet-policy snapshots, and the third-party Sysmon configuration used in the lab. These are exported configuration artifacts, not drop-in production templates: the rule queries preserve the historical lab values `agent.name: ubantu`, `agent.name: win`, and `user.name: Mrinal`; the thresholds and schedules require environment-specific tuning; the connector retains a private lab URL and requires a new API key. The API-key value is the only field changed in the sanitized NDJSON; the historical rule names, descriptions, queries, thresholds, schedules, grouping, and actions remain unchanged.
 
 ## Scope and Limitations
 
@@ -89,7 +89,7 @@ This is a controlled learning environment, not a production SOC. It does not dem
 | [Investigations](investigations/) | Event review and analyst pivots |
 | [Automation](automation/) | Basic Elastic-to-osTicket ticket creation |
 | [Dashboards](dashboards/) | SSH monitoring visualizations |
-| [Artifacts](artifacts/) | Reusable exports, applied-policy snapshots, and Sysmon configuration |
+| [Artifacts](artifacts/) | Exported configurations, applied-policy snapshots, and attributed Sysmon configuration |
 | [Evidence](evidence/) | Claim-to-evidence map with proof boundaries |
 | [Full report](SOC-INVESTIGATION-REPORT.md) | End-to-end findings, timelines, limitations, and lessons learned |
 

@@ -1,6 +1,6 @@
-# Reusable Artifacts
+# Exported Configuration Artifacts
 
-These files were exported from the lab or, in the Sysmon case, preserved from the third-party configuration actually deployed. Screenshots remain under `evidence/`; this directory is for configuration and saved-object artifacts.
+These files were exported from the lab or, in the Sysmon case, preserved from the third-party configuration actually deployed. Screenshots remain under `evidence/`; this directory is for configuration and saved-object artifacts. They are historical lab evidence, not drop-in production templates.
 
 | Artifact | Type | Exact boundary |
 | --- | --- | --- |
@@ -25,6 +25,15 @@ These files were exported from the lab or, in the Sysmon case, preserved from th
 - Threshold: `2`, grouped by `source.ip` and `user.name`
 - Schedule: every `30s`, lookback `now-330s`
 - No Logon Type `10` condition exists, so the exported rule is not RDP-specific.
+
+## Reuse Boundaries
+
+- `ubantu` is the historical misspelled Elastic Agent name preserved in the SSH query; it must match an actual agent name or be changed before reuse.
+- `Mrinal`, `win`, the thresholds, schedules, and grouping fields are lab-specific validation values, not general production recommendations.
+- The connector URL points to the private lab host and the `REDACTED` API-key placeholder is intentionally nonfunctional.
+- The Fleet YAML files are applied-policy snapshots for evidence and review, not clean Fleet import packages.
+
+The raw Windows rule description says "administrator via RDP," but the preserved query filters `user.name: Mrinal`, does not validate Logon Type `10`, and is therefore neither administrator-specific nor RDP-specific. This inconsistency is historical and was not silently corrected in the export.
 
 ## Credential Sanitization
 

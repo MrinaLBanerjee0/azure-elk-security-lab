@@ -16,7 +16,7 @@ This diagram separates physical/logical topology from security activity and SOC 
 - Controlled SSH failures originated from myVm (`10.1.0.5`) and targeted Ubuntu (`10.1.0.4`).
 - Kali performed controlled RDP reconnaissance and unsuccessful authentication testing against Windows.
 - The Windows validation rule captured Event ID `4625`; RDP-specific production logic would additionally require Logon Type `10`.
-- Elastic alerts generated osTicket incidents through a webhook/API workflow.
+- Elastic alerts generated basic osTicket tickets through a webhook/API workflow; assignment and closure are not demonstrated.
 - Mythic HTTP C2 profile and Apollo payload creation are confirmed. The intended callback is endpoint-initiated, but no active callback or session is confirmed.
 
 ## Visual Semantics
