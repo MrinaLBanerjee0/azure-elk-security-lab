@@ -1,0 +1,1044 @@
+id: 8326a0f6-999a-4475-a7c3-2445e50f5e82
+revision: 8
+outputs:
+  default:
+    type: elasticsearch
+    hosts:
+      - https://10.0.0.4:9200
+    ssl.ca_trusted_fingerprint: 42588706bfa92d6c86c931df9e814bea4a99eb4bc8f76a606be4f9aceb1ca562
+    preset: balanced
+fleet:
+  hosts:
+    - https://10.0.0.5:8220
+output_permissions:
+  default:
+    _elastic_agent_monitoring:
+      indices:
+        - names:
+            - logs-elastic_agent.apm_server-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.apm_server-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.auditbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.auditbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.cloud_defend-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.cloudbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.cloudbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.elastic_agent-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.endpoint_security-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.endpoint_security-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.filebeat_input-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.filebeat_input-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.filebeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.filebeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.fleet_server-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.fleet_server-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.heartbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.heartbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.metricbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.metricbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.osquerybeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.osquerybeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.packetbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-elastic_agent.packetbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.pf_elastic_collector-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.pf_elastic_symbolizer-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.pf_host_agent-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-elastic_agent.status_change-default
+          privileges:
+            - auto_configure
+            - create_doc
+    _elastic_agent_checks:
+      cluster:
+        - monitor
+    86b2843c-a0f1-4210-bd23-509d9e2a229c:
+      indices:
+        - names:
+            - logs-system.auth-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-system.syslog-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-system.auth-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-system.syslog-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-system.application-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-system.security-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-system.system-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.cpu-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.diskio-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.filesystem-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.fsstat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.load-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.memory-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.network-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.process-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.process.summary-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.socket_summary-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-system.uptime-default
+          privileges:
+            - auto_configure
+            - create_doc
+    29b90f16-d832-4229-8b4e-f879759945fb:
+      indices:
+        - names:
+            - logs-*-*
+          privileges:
+            - auto_configure
+            - create_doc
+    1be8f036-b1a2-4b97-b9e7-e573f47a2bf9:
+      indices:
+        - names:
+            - logs-*-*
+          privileges:
+            - auto_configure
+            - create_doc
+    cd0bcc37-0cfb-485e-af94-3a4ba47bb476:
+      indices:
+        - names:
+            - .logs-endpoint.action.responses-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - .logs-endpoint.actions-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-endpoint.alerts-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-endpoint.events.api-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - .logs-endpoint.diagnostic.collection-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-endpoint.events.device-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-endpoint.events.file-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - .logs-endpoint.heartbeat-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-endpoint.events.library-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-endpoint.metadata-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-endpoint.metrics-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-endpoint.events.network-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - metrics-endpoint.policy-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-endpoint.events.process-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-endpoint.events.registry-default
+          privileges:
+            - auto_configure
+            - create_doc
+        - names:
+            - logs-endpoint.events.security-default
+          privileges:
+            - auto_configure
+            - create_doc
+agent:
+  download:
+    sourceURI: https://artifacts.elastic.co/downloads/
+  monitoring:
+    enabled: true
+    use_output: default
+    logs: true
+    metrics: true
+    traces: true
+    namespace: default
+  features: {}
+  protection:
+    enabled: false
+    uninstall_token_hash: HbOyGFu/X8Zt2Kv3LfhzzXVIx8h8vLPZ5kWnxV90htc=
+    signing_key: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAESvGhynj8YFl57T5qs64V4Ro684mfrQAz+i+YFPacDp7MNFcRYmVgy37NxRIT3h1mmWcok39Nt1E2s8+JAoV/pw==
+inputs:
+  - id: logfile-system-86b2843c-a0f1-4210-bd23-509d9e2a229c
+    name: system-4
+    revision: 1
+    type: logfile
+    use_output: default
+    meta:
+      package:
+        name: system
+        version: 2.21.0
+        policy_template: system
+        release: ga
+    data_stream:
+      namespace: default
+    package_policy_id: 86b2843c-a0f1-4210-bd23-509d9e2a229c
+    streams:
+      - id: logfile-system.auth-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.auth
+          type: logs
+        condition: (${host.platform} != "windows") and (${host.os_version} != "12
+          (bookworm)" and ${host.os_version} != "13 (trixie)" and
+          (${host.os_platform} != "amzn" or ${host.os_version} != "2023") and
+          (${host.os_platform} != "sles" or (${host.os_version} != "15 SP1" and
+          ${host.os_version} != "15-SP1" and ${host.os_version} != "15 SP2" and
+          ${host.os_version} != "15-SP2" and ${host.os_version} != "15 SP3" and
+          ${host.os_version} != "15-SP3" and ${host.os_version} != "15 SP4" and
+          ${host.os_version} != "15-SP4" and ${host.os_version} != "15 SP5" and
+          ${host.os_version} != "15-SP5" and ${host.os_version} != "15 SP6" and
+          ${host.os_version} != "15-SP6" and ${host.os_version} != "15 SP7" and
+          ${host.os_version} != "15-SP7" and ${host.os_version} != "16.0")))
+        ignore_older: 72h
+        paths:
+          - /var/log/auth.log*
+          - /var/log/secure*
+        exclude_files:
+          - \.gz$
+        multiline:
+          pattern: ^\s
+          match: after
+        tags:
+          - system-auth
+        allow_deprecated_use: true
+        processors:
+          - add_locale: null
+          - rename:
+              fields:
+                - from: message
+                  to: event.original
+              ignore_missing: true
+              fail_on_error: false
+          - syslog:
+              field: event.original
+              ignore_missing: true
+              ignore_failure: true
+      - id: logfile-system.syslog-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.syslog
+          type: logs
+        condition: (${host.platform} != "windows") and (${host.os_version} != "12
+          (bookworm)" and ${host.os_version} != "13 (trixie)" and
+          (${host.os_platform} != "amzn" or ${host.os_version} != "2023") and
+          (${host.os_platform} != "sles" or (${host.os_version} != "15 SP1" and
+          ${host.os_version} != "15-SP1" and ${host.os_version} != "15 SP2" and
+          ${host.os_version} != "15-SP2" and ${host.os_version} != "15 SP3" and
+          ${host.os_version} != "15-SP3" and ${host.os_version} != "15 SP4" and
+          ${host.os_version} != "15-SP4" and ${host.os_version} != "15 SP5" and
+          ${host.os_version} != "15-SP5" and ${host.os_version} != "15 SP6" and
+          ${host.os_version} != "15-SP6" and ${host.os_version} != "15 SP7" and
+          ${host.os_version} != "15-SP7" and ${host.os_version} != "16.0")))
+        paths:
+          - /var/log/messages*
+          - /var/log/syslog*
+          - /var/log/system*
+        exclude_files:
+          - \.gz$
+        multiline:
+          pattern: ^\s
+          match: after
+        processors:
+          - add_locale: null
+        allow_deprecated_use: true
+        tags: null
+        ignore_older: 72h
+  - id: journald-system-86b2843c-a0f1-4210-bd23-509d9e2a229c
+    name: system-4
+    revision: 1
+    type: journald
+    use_output: default
+    meta:
+      package:
+        name: system
+        version: 2.21.0
+        policy_template: system
+        release: ga
+    data_stream:
+      namespace: default
+    package_policy_id: 86b2843c-a0f1-4210-bd23-509d9e2a229c
+    streams:
+      - id: journald-system.auth-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        type: journald
+        data_stream:
+          dataset: system.auth
+          type: logs
+        facilities:
+          - 4
+          - 10
+        condition: (${host.platform} != "windows") and (${host.os_version} == "12
+          (bookworm)" or ${host.os_version} == "13 (trixie)" or
+          (${host.os_platform} == "amzn" and ${host.os_version} == "2023") or
+          (${host.os_platform} == "sles" and (${host.os_version} == "15 SP1" or
+          ${host.os_version} == "15-SP1" or ${host.os_version} == "15 SP2" or
+          ${host.os_version} == "15-SP2" or ${host.os_version} == "15 SP3" or
+          ${host.os_version} == "15-SP3" or ${host.os_version} == "15 SP4" or
+          ${host.os_version} == "15-SP4" or ${host.os_version} == "15 SP5" or
+          ${host.os_version} == "15-SP5" or ${host.os_version} == "15 SP6" or
+          ${host.os_version} == "15-SP6" or ${host.os_version} == "15 SP7" or
+          ${host.os_version} == "15-SP7" or ${host.os_version} == "16.0")))
+        tags: null
+      - id: journald-system.syslog-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        type: journald
+        data_stream:
+          dataset: system.syslog
+          type: logs
+        facilities:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 11
+          - 12
+          - 15
+        condition: (${host.platform} != "windows") and (${host.os_version} == "12
+          (bookworm)" or ${host.os_version} == "13 (trixie)" or
+          (${host.os_platform} == "amzn" and ${host.os_version} == "2023") or
+          (${host.os_platform} == "sles" and (${host.os_version} == "15 SP1" or
+          ${host.os_version} == "15-SP1" or ${host.os_version} == "15 SP2" or
+          ${host.os_version} == "15-SP2" or ${host.os_version} == "15 SP3" or
+          ${host.os_version} == "15-SP3" or ${host.os_version} == "15 SP4" or
+          ${host.os_version} == "15-SP4" or ${host.os_version} == "15 SP5" or
+          ${host.os_version} == "15-SP5" or ${host.os_version} == "15 SP6" or
+          ${host.os_version} == "15-SP6" or ${host.os_version} == "15 SP7" or
+          ${host.os_version} == "15-SP7" or ${host.os_version} == "16.0")))
+        tags: null
+  - id: winlog-system-86b2843c-a0f1-4210-bd23-509d9e2a229c
+    name: system-4
+    revision: 1
+    type: winlog
+    use_output: default
+    meta:
+      package:
+        name: system
+        version: 2.21.0
+        policy_template: system
+        release: ga
+    data_stream:
+      namespace: default
+    package_policy_id: 86b2843c-a0f1-4210-bd23-509d9e2a229c
+    streams:
+      - id: winlog-system.application-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        name: Application
+        data_stream:
+          dataset: system.application
+          type: logs
+        condition: ${host.platform} == 'windows'
+        ignore_older: 72h
+      - id: winlog-system.security-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        name: Security
+        data_stream:
+          dataset: system.security
+          type: logs
+        condition: ${host.platform} == 'windows'
+        ignore_older: 72h
+        tags: null
+        include_xml: true
+        processors:
+          - decode_xml:
+              when:
+                and:
+                  - has_fields:
+                      - winlog.event_data.TaskContent
+                  - equals:
+                      winlog.provider_name: Microsoft-Windows-Security-Auditing
+              field: winlog.event_data.TaskContent
+              target_field: winlog._tmp.scheduled_task.task_content
+              to_lower: true
+              ignore_missing: true
+              ignore_failure: true
+          - decode_xml:
+              when:
+                and:
+                  - has_fields:
+                      - winlog.event_data.TaskContentNew
+                  - equals:
+                      winlog.provider_name: Microsoft-Windows-Security-Auditing
+              field: winlog.event_data.TaskContentNew
+              target_field: winlog._tmp.scheduled_task.task_content_new
+              to_lower: true
+              ignore_missing: true
+              ignore_failure: true
+      - id: winlog-system.system-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        name: System
+        data_stream:
+          dataset: system.system
+          type: logs
+        condition: ${host.platform} == 'windows'
+        ignore_older: 72h
+  - id: system/metrics-system-86b2843c-a0f1-4210-bd23-509d9e2a229c
+    name: system-4
+    revision: 1
+    type: system/metrics
+    use_output: default
+    meta:
+      package:
+        name: system
+        version: 2.21.0
+        policy_template: system
+        release: ga
+    data_stream:
+      namespace: default
+    package_policy_id: 86b2843c-a0f1-4210-bd23-509d9e2a229c
+    streams:
+      - id: system/metrics-system.cpu-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.cpu
+          type: metrics
+        metricsets:
+          - cpu
+        cpu.metrics:
+          - percentages
+          - normalized_percentages
+        period: 10s
+      - id: system/metrics-system.diskio-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.diskio
+          type: metrics
+        metricsets:
+          - diskio
+        diskio.include_devices: null
+        period: 10s
+      - id: system/metrics-system.filesystem-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.filesystem
+          type: metrics
+        metricsets:
+          - filesystem
+        period: 1m
+        processors:
+          - drop_event.when.regexp:
+              system.filesystem.mount_point: ^/(sys|cgroup|proc|dev|etc|host|lib|snap)($|/)
+      - id: system/metrics-system.fsstat-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.fsstat
+          type: metrics
+        metricsets:
+          - fsstat
+        period: 1m
+        processors:
+          - drop_event.when.regexp:
+              system.fsstat.mount_point: ^/(sys|cgroup|proc|dev|etc|host|lib|snap)($|/)
+      - id: system/metrics-system.load-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.load
+          type: metrics
+        metricsets:
+          - load
+        condition: ${host.platform} != 'windows'
+        period: 10s
+      - id: system/metrics-system.memory-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.memory
+          type: metrics
+        metricsets:
+          - memory
+        period: 10s
+      - id: system/metrics-system.network-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.network
+          type: metrics
+        metricsets:
+          - network
+        period: 10s
+        interfaces: null
+        network.interfaces: null
+      - id: system/metrics-system.process-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.process
+          type: metrics
+        metricsets:
+          - process
+        period: 10s
+        process.include_top_n.by_cpu: 5
+        process.include_top_n.by_memory: 5
+        process.cmdline.cache.enabled: true
+        process.cgroups.enabled: false
+        process.include_cpu_ticks: false
+        processes:
+          - .*
+      - id: system/metrics-system.process.summary-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.process.summary
+          type: metrics
+        metricsets:
+          - process_summary
+        period: 10s
+      - id: system/metrics-system.socket_summary-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.socket_summary
+          type: metrics
+        metricsets:
+          - socket_summary
+        period: 10s
+      - id: system/metrics-system.uptime-86b2843c-a0f1-4210-bd23-509d9e2a229c
+        data_stream:
+          dataset: system.uptime
+          type: metrics
+        metricsets:
+          - uptime
+        period: 10s
+  - id: winlog-winlogs-29b90f16-d832-4229-8b4e-f879759945fb
+    name: win-defender
+    revision: 1
+    type: winlog
+    use_output: default
+    meta:
+      package:
+        name: winlog
+        version: 2.6.0
+        policy_template: winlogs
+        release: ga
+    data_stream:
+      namespace: default
+    package_policy_id: 29b90f16-d832-4229-8b4e-f879759945fb
+    streams:
+      - id: winlog-winlog.winlogs-29b90f16-d832-4229-8b4e-f879759945fb
+        name: Microsoft-Windows-Windows Defender/Operational
+        data_stream:
+          dataset: winlog.winlog
+          type: logs
+          elasticsearch:
+            dynamic_dataset: true
+            dynamic_namespace: true
+        condition: ${host.platform} == 'windows'
+        event_id: 1116,1117,5001
+        ignore_older: 72h
+  - id: winlog-winlogs-1be8f036-b1a2-4b97-b9e7-e573f47a2bf9
+    name: win-sysmon
+    revision: 1
+    type: winlog
+    use_output: default
+    meta:
+      package:
+        name: winlog
+        version: 2.6.0
+        policy_template: winlogs
+        release: ga
+    data_stream:
+      namespace: default
+    package_policy_id: 1be8f036-b1a2-4b97-b9e7-e573f47a2bf9
+    streams:
+      - id: winlog-winlog.winlogs-1be8f036-b1a2-4b97-b9e7-e573f47a2bf9
+        name: Microsoft-Windows-Sysmon/Operational
+        data_stream:
+          dataset: winlog.winlog
+          type: logs
+          elasticsearch:
+            dynamic_dataset: true
+            dynamic_namespace: true
+        condition: ${host.platform} == 'windows'
+        ignore_older: 72h
+  - id: cd0bcc37-0cfb-485e-af94-3a4ba47bb476
+    name: socTest
+    revision: 1
+    type: endpoint
+    use_output: default
+    meta:
+      package:
+        name: endpoint
+        version: 9.4.1
+        release: ga
+    data_stream:
+      namespace: default
+    package_policy_id: cd0bcc37-0cfb-485e-af94-3a4ba47bb476
+    integration_config:
+      type: endpoint
+      endpointConfig:
+        preset: EDRComplete
+    artifact_manifest:
+      manifest_version: 1.0.0
+      schema_version: v1
+      artifacts:
+        endpoint-exceptionlist-macos-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-exceptionlist-macos-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-exceptionlist-windows-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-exceptionlist-windows-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-exceptionlist-linux-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-exceptionlist-linux-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-trustlist-macos-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-trustlist-macos-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-trustlist-windows-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-trustlist-windows-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-trustlist-linux-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-trustlist-linux-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-eventfilterlist-macos-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-eventfilterlist-macos-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-eventfilterlist-windows-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-eventfilterlist-windows-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-eventfilterlist-linux-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-eventfilterlist-linux-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-hostisolationexceptionlist-macos-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-hostisolationexceptionlist-macos-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-hostisolationexceptionlist-windows-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-hostisolationexceptionlist-windows-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-hostisolationexceptionlist-linux-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-hostisolationexceptionlist-linux-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-blocklist-macos-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-blocklist-macos-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-blocklist-windows-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-blocklist-windows-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-blocklist-linux-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-blocklist-linux-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-trusteddevicelist-macos-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-trusteddevicelist-macos-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+        endpoint-trusteddevicelist-windows-v1:
+          encryption_algorithm: none
+          decoded_sha256: d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          decoded_size: 14
+          encoded_sha256: f8e6afa1d5662f5b37f83337af774b5785b5b7f1daee08b7b00c2d6813874cda
+          encoded_size: 22
+          relative_url: /api/fleet/artifacts/endpoint-trusteddevicelist-windows-v1/d801aa1fb7ddcc330a5e3173372ea6af4a3d08ec58074478e85aa5603e926658
+          compression_algorithm: zlib
+    policy:
+      meta:
+        license: trial
+        license_uuid: 8281762a-c66c-448f-84f9-f4068233ade9
+        cluster_uuid: EmopJus4SVWCt5bvFkz0kw
+        cluster_name: elasticsearch
+        cloud: false
+        serverless: false
+        billable: false
+      global_manifest_version: latest
+      global_telemetry_enabled: true
+      windows:
+        events:
+          credential_access: true
+          dll_and_driver_load: true
+          dns: true
+          file: true
+          network: true
+          process: true
+          registry: true
+          security: true
+        device_control:
+          enabled: true
+          usb_storage: deny_all
+        malware:
+          mode: prevent
+          blocklist: true
+          on_write_scan: true
+        ransomware:
+          mode: prevent
+          supported: true
+        memory_protection:
+          mode: prevent
+          supported: true
+        behavior_protection:
+          mode: prevent
+          reputation_service: false
+          supported: true
+        popup:
+          malware:
+            enabled: true
+            message: ""
+          ransomware:
+            enabled: true
+            message: ""
+          memory_protection:
+            enabled: true
+            message: ""
+          behavior_protection:
+            enabled: true
+            message: ""
+          device_control:
+            enabled: true
+            message: ""
+        logging:
+          file: info
+        antivirus_registration:
+          enabled: true
+          mode: sync_with_malware_prevent
+        attack_surface_reduction:
+          credential_hardening:
+            enabled: true
+      mac:
+        events:
+          dns: true
+          process: true
+          file: true
+          network: true
+          security: true
+        malware:
+          mode: prevent
+          blocklist: true
+          on_write_scan: true
+        ransomware:
+          mode: "off"
+          supported: true
+        device_control:
+          enabled: true
+          usb_storage: deny_all
+        behavior_protection:
+          mode: prevent
+          reputation_service: false
+          supported: true
+        memory_protection:
+          mode: prevent
+          supported: true
+        popup:
+          malware:
+            enabled: true
+            message: ""
+          ransomware:
+            enabled: true
+            message: ""
+          behavior_protection:
+            enabled: true
+            message: ""
+          memory_protection:
+            enabled: true
+            message: ""
+          device_control:
+            enabled: true
+            message: ""
+        logging:
+          file: info
+        advanced:
+          capture_env_vars: DYLD_INSERT_LIBRARIES,DYLD_FRAMEWORK_PATH,DYLD_LIBRARY_PATH,LD_PRELOAD
+      linux:
+        events:
+          dns: true
+          file: true
+          process: true
+          network: true
+          session_data: false
+          tty_io: false
+        malware:
+          mode: prevent
+          blocklist: true
+          on_write_scan: true
+        behavior_protection:
+          mode: prevent
+          reputation_service: false
+          supported: true
+        memory_protection:
+          mode: prevent
+          supported: true
+        popup:
+          malware:
+            enabled: true
+            message: ""
+          behavior_protection:
+            enabled: true
+            message: ""
+          memory_protection:
+            enabled: true
+            message: ""
+        logging:
+          file: info
+        advanced:
+          capture_env_vars: LD_PRELOAD,LD_LIBRARY_PATH
+signed:
+  data: eyJpZCI6IjgzMjZhMGY2LTk5OWEtNDQ3NS1hN2MzLTI0NDVlNTBmNWU4MiIsImFnZW50Ijp7ImZlYXR1cmVzIjp7fSwicHJvdGVjdGlvbiI6eyJlbmFibGVkIjpmYWxzZSwidW5pbnN0YWxsX3Rva2VuX2hhc2giOiJIYk95R0Z1L1g4WnQyS3YzTGZoenpYVkl4OGg4dkxQWjVrV254VjkwaHRjPSIsInNpZ25pbmdfa2V5IjoiTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFU3ZHaHluajhZRmw1N1Q1cXM2NFY0Um82ODRtZnJRQXoraStZRlBhY0RwN01ORmNSWW1WZ3kzN054UklUM2gxbW1XY29rMzlOdDFFMnM4K0pBb1YvcHc9PSJ9fSwiaW5wdXRzIjpbeyJpZCI6ImxvZ2ZpbGUtc3lzdGVtLTg2YjI4NDNjLWEwZjEtNDIxMC1iZDIzLTUwOWQ5ZTJhMjI5YyIsIm5hbWUiOiJzeXN0ZW0tNCIsInJldmlzaW9uIjoxLCJ0eXBlIjoibG9nZmlsZSJ9LHsiaWQiOiJqb3VybmFsZC1zeXN0ZW0tODZiMjg0M2MtYTBmMS00MjEwLWJkMjMtNTA5ZDllMmEyMjljIiwibmFtZSI6InN5c3RlbS00IiwicmV2aXNpb24iOjEsInR5cGUiOiJqb3VybmFsZCJ9LHsiaWQiOiJ3aW5sb2ctc3lzdGVtLTg2YjI4NDNjLWEwZjEtNDIxMC1iZDIzLTUwOWQ5ZTJhMjI5YyIsIm5hbWUiOiJzeXN0ZW0tNCIsInJldmlzaW9uIjoxLCJ0eXBlIjoid2lubG9nIn0seyJpZCI6InN5c3RlbS9tZXRyaWNzLXN5c3RlbS04NmIyODQzYy1hMGYxLTQyMTAtYmQyMy01MDlkOWUyYTIyOWMiLCJuYW1lIjoic3lzdGVtLTQiLCJyZXZpc2lvbiI6MSwidHlwZSI6InN5c3RlbS9tZXRyaWNzIn0seyJpZCI6IndpbmxvZy13aW5sb2dzLTI5YjkwZjE2LWQ4MzItNDIyOS04YjRlLWY4Nzk3NTk5NDVmYiIsIm5hbWUiOiJ3aW4tZGVmZW5kZXIiLCJyZXZpc2lvbiI6MSwidHlwZSI6IndpbmxvZyJ9LHsiaWQiOiJ3aW5sb2ctd2lubG9ncy0xYmU4ZjAzNi1iMWEyLTRiOTctYjllNy1lNTczZjQ3YTJiZjkiLCJuYW1lIjoid2luLXN5c21vbiIsInJldmlzaW9uIjoxLCJ0eXBlIjoid2lubG9nIn0seyJpZCI6ImNkMGJjYzM3LTBjZmItNDg1ZS1hZjk0LTNhNGJhNDdiYjQ3NiIsIm5hbWUiOiJzb2NUZXN0IiwicmV2aXNpb24iOjEsInR5cGUiOiJlbmRwb2ludCJ9XX0=
+  signature: MEUCIQD2ZHfwK2axCXWVTs9JMwSSBSvFsMpHJY+F1wdOPL2LiQIgXYwmvxkspDhPWWevtkeDLafWXcziB+r5nfbrMCduvOg=
+secret_references: []
+namespaces:
+  - default

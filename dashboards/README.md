@@ -1,30 +1,22 @@
 # Security Dashboards
 
-Kibana dashboards and visualizations were created to provide an analyst-facing view of authentication activity and identify notable sources of security events.
-
 ## ELK SOC Monitoring Dashboard
 
 ![ELK SOC Monitoring Dashboard](../evidence/dashboards/elk-soc-monitoring-dashboard.png)
 
-The SOC monitoring dashboard provides a consolidated view of SSH authentication failures over time and the top source IP addresses.
+The real Kibana export confirms a dashboard titled `ELK SOC Monitoring Dashboard` using the `logs-*` data view.
 
-## SSH Failures Over Time
+## Exported Panels
+
+1. `SSH Authentication Failures Over Time` — line chart querying `system.auth.ssh.event : "Failed"`.
+2. `Top SSH Source IPs` — bar chart querying the same failed-SSH events and grouping by the top ten `source.ip` values.
 
 ![SSH Failures Over Time](../evidence/dashboards/ssh-failures-over-time.png)
 
-This visualization shows SSH authentication failure activity over time, helping identify periods of increased authentication activity.
-
-## Top Source IPs
-
 ![Top Source IP Visualization](../evidence/dashboards/top-source-ip-visualization.png)
 
-This visualization shows the most frequent source IP addresses associated with the observed SSH authentication events.
+The export does not contain Windows, Defender, detection-alert, or osTicket panels. Its saved-object description is broader than the two panels actually present, so the demonstrated dashboard scope is SSH monitoring.
 
-## Analyst Use
+## Exported Artifact
 
-These visualizations support:
-
-- Monitoring authentication activity
-- Identifying spikes in failed SSH authentication
-- Identifying prominent source IP addresses
-- Providing context during security investigations
+[Download the real Kibana NDJSON export](../artifacts/dashboards/elk-soc-monitoring-dashboard.ndjson).

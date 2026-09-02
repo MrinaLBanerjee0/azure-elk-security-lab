@@ -1,59 +1,32 @@
 # Attack Simulation
 
-Controlled attack simulations were performed to generate realistic security activity for the SOC lab and validate telemetry, detections, investigations, and automated response workflows.
+Controlled activity was performed to generate security telemetry and exercise the SOC workflow.
 
-## RDP Reconnaissance
-
-Network reconnaissance was performed against the Windows endpoint to identify the exposed RDP service before attempting authentication attacks.
+## RDP Reconnaissance and Authentication Testing
 
 ![RDP Reconnaissance](../evidence/attack-simulation/rdp-reconnaissance.png)
 
-This evidence shows the reconnaissance activity performed against the RDP target.
-
-## RDP Brute-Force Attempt
-
-A controlled RDP brute-force attempt was performed using Crowbar against the Windows endpoint.
+Network reconnaissance identified TCP port `3389` on the Windows target.
 
 ![RDP Brute-Force Attempt](../evidence/attack-simulation/rdp-bruteforce-attempt.png)
 
-The attempt was **unsuccessful** and did not establish authenticated access. It was used to generate authentication-related activity for SOC detection and investigation testing.
+Crowbar performed controlled RDP credential testing. The captured result showed no valid credential and no authenticated RDP session.
 
-## Mythic Payload Creation
+This proves the RDP test occurred. It does not make the separate Event ID `4625` threshold rule RDP-specific, because that exported query did not validate Logon Type `10`.
 
-A Windows payload was created in the Mythic C2 platform as part of the controlled attack-simulation environment.
+## Mythic and Apollo Configuration
 
 ![Mythic Payload Creation](../evidence/attack-simulation/mythic-payload-creation.png)
 
-This evidence shows the payload creation process in Mythic.
-
-## Mythic C2 Profile
-
-An HTTP-based C2 profile was configured in Mythic for the simulation environment.
-
 ![Mythic C2 Profile](../evidence/attack-simulation/mythic-c2-profile.png)
-
-This shows the configured HTTP C2 profile used by the payload.
-
-## Mythic Payload
 
 ![Mythic Payload](../evidence/attack-simulation/mythic-payload.png)
 
-This shows the created Windows payload within Mythic.
+The evidence proves that an HTTP C2 profile was configured and an Apollo Windows payload was created and listed in Mythic. It does not prove payload execution, delivery, an active callback, a session, command execution, or post-exploitation.
 
-## Purpose
-
-The simulations were used to generate security activity that could be observed through endpoint telemetry and evaluated through the SOC workflow:
+## Evidence Boundary
 
 ```text
-Attack Simulation
-        ↓
-Telemetry Collection
-        ↓
-Detection
-        ↓
-Alert
-        ↓
-Investigation
-        ↓
-Automated Ticketing
+Confirmed: RDP test attempt; Mythic profile; Apollo payload build
+Not confirmed: valid RDP credential; Mythic callback or session
 ```

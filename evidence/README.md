@@ -18,9 +18,9 @@ This index maps each material project claim to the screenshot that supports it a
 | Claim | Evidence | What it proves | Boundary |
 | --- | --- | --- | --- |
 | Agents were enrolled and healthy | [Fleet agents](telemetry/fleet-agents.png) | Captured healthy status for `win`, `ubuntu`, and `fleet` | Health at capture time is not continuous availability |
-| Windows integrations were configured | [Windows integrations](telemetry/windows-telemetry-integrations.png) | The Windows policy included Defender and Sysmon integrations | Configuration does not prove every dataset was populated |
+| Windows integrations were configured | [Windows integrations](telemetry/windows-telemetry-integrations.png) | The Windows policy included System, Defender, Sysmon, and Elastic Defend integrations | Configuration does not prove every dataset was populated |
 | Sysmon process telemetry arrived | [Sysmon process create](telemetry/sysmon-process-create.png) | A Sysmon Event ID `1` process-create event was searchable | One event does not establish complete Sysmon coverage |
-| Defender telemetry arrived | [Defender events](telemetry/windows-defender-events.png) | Defender Event ID `5007` records were searchable | Does not prove prevention or full endpoint coverage |
+| Defender telemetry arrived | [Defender events](telemetry/windows-defender-events.png) | Defender Event ID `5007` records were searchable | Observed data is separate from the policy export, which configures `1116`, `1117`, and `5001` |
 | Ubuntu SSH events arrived | [Ubuntu SSH events](telemetry/ubuntu-ssh-events.png) | SSH authentication activity was ingested from Ubuntu | Does not alone establish attack intent |
 
 Elastic Agents send endpoint telemetry to Elasticsearch. Fleet Server manages enrollment, policy delivery, integrations, actions, status, and health; it is not shown as the telemetry relay or analysis engine.
@@ -46,7 +46,7 @@ Elastic Agents send endpoint telemetry to Elasticsearch. Fleet Server manages en
 | Windows failed-logon settings were captured | [RDP rule definition](detections/rdp-rule-definition.png) | The lab rule used Event ID `4625`, threshold two, grouped by source IP and username | Event `4625` is not RDP-specific without validating Logon Type `10` |
 | Windows failed-logon rule executed | [RDP rule execution](detections/rdp-rule-execution.png) | The rule ran successfully on its schedule | Does not demonstrate production-quality tuning |
 | A related alert was generated | [RDP alert details](detections/rdp-alert-details.png) | A medium-severity, risk-score `47` alert was captured | Does not prove successful RDP authentication |
-| Alert volume was visible | [Alerts overview](detections/alerts-overview.png) | Captured alert distribution and high RDP-rule volume | High volume indicates tuning and suppression work remains |
+| Alert volume was visible | [Alerts overview](detections/alerts-overview.png) | Captured alert distribution and high volume from the historically named Windows rule | High volume indicates tuning and suppression work remains |
 
 ## Investigation
 
@@ -62,10 +62,11 @@ The PDF-derived evidence identifies myVm (`10.1.0.5`) as the controlled SSH sour
 
 | Claim | Evidence | What it proves | Boundary |
 | --- | --- | --- | --- |
+| A webhook connector was configured | [Connector configuration](automation/osticket-connector-configuration.png) | Connector name, POST method, endpoint, and header configuration were present | The screenshot does not expose or validate the API-key value |
 | Elastic could reach the ticket API | [Connector test](automation/osticket-connector-test-success.png) | The osTicket connector test returned success | Does not test retries, failure handling, or secret rotation |
 | Security tickets existed in osTicket | [Ticket list](automation/osticket-ticket-list.png) | SSH and RDP-labelled incidents were present | Does not prove assignment, SLA, or complete closure workflow |
-| An RDP-labelled ticket was created | [RDP API ticket](automation/rdp-api-ticket.png) | Alert details were represented in an osTicket incident | Ticket content inherits the RDP-rule specificity limitation |
-| An SSH ticket was created | [SSH API ticket](automation/ssh-api-ticket.png) | SSH alert details were represented in an osTicket incident | Does not prove downstream response actions |
+| A historically RDP-labelled ticket was created | [Windows API ticket](automation/rdp-api-ticket.png) | The API created a ticket with the historical rule name and basic investigation message | The ticket does not prove RDP specificity or enriched alert context |
+| An SSH ticket was created | [SSH API ticket](automation/ssh-api-ticket.png) | The API created a ticket with the SSH rule name and basic investigation message | Does not prove enrichment or downstream response actions |
 
 ## Dashboards
 
@@ -74,6 +75,14 @@ The PDF-derived evidence identifies myVm (`10.1.0.5`) as the controlled SSH sour
 | A SOC dashboard was assembled | [Monitoring dashboard](dashboards/elk-soc-monitoring-dashboard.png) | A dashboard combined SSH failure trend and top-source panels | Current dashboard coverage is SSH-focused |
 | SSH failures were trended | [Failures over time](dashboards/ssh-failures-over-time.png) | Failed SSH events were visualized across time | Does not measure detection quality by itself |
 | Top SSH sources were ranked | [Top source IPs](dashboards/top-source-ip-visualization.png) | High-volume source addresses were visualized | Source IP alone does not establish actor identity |
+
+## Reusable Artifact Corroboration
+
+- [Rules and connector export](../artifacts/detections/custom-rules-and-osticket-connector.sanitized.ndjson): exact historical rule logic with only the API-key value redacted.
+- [Dashboard export](../artifacts/dashboards/elk-soc-monitoring-dashboard.ndjson): real Kibana saved objects using `logs-*`.
+- [Windows applied policy](../artifacts/fleet/windows-applied-policy.yml): exact Windows/System/Sysmon/Defender/Elastic Defend inputs.
+- [Ubuntu applied policy](../artifacts/fleet/ubuntu-applied-policy.yml): exact Linux log paths and datasets.
+- [Sysmon configuration](../artifacts/sysmon/sysmon-modular-balanced.xml): third-party balanced config attributed to Olaf Hartong/Sysmon Modular.
 
 ## Evidence Status Summary
 

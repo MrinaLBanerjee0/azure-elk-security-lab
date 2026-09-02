@@ -21,7 +21,7 @@
 - [6. Detection Engineering](#6-detection-engineering)
 - [7. Investigation Methodology](#7-investigation-methodology)
 - [8. Investigation Case 1 — Ubuntu SSH Brute Force](#8-investigation-case-1--ubuntu-ssh-brute-force)
-- [9. Investigation Case 2 — Windows RDP Brute Force](#9-investigation-case-2--windows-rdp-brute-force)
+- [9. Investigation Case 2 — Windows Failed-Logon Alert in RDP Test Context](#9-investigation-case-2--windows-failed-logon-alert-in-rdp-test-context)
 - [10. Alert Triage and Correlation](#10-alert-triage-and-correlation)
 - [11. Automated osTicket Incident Creation](#11-automated-osticket-incident-creation)
 - [12. SOC Dashboard and Monitoring](#12-soc-dashboard-and-monitoring)
@@ -190,7 +190,7 @@ The Windows monitoring configuration included:
 - Microsoft Defender events
 - RDP-related authentication activity
 
-Sysmon added detailed endpoint visibility, including process-creation data. Fleet policies and Windows integrations were configured so that Elastic Agent could forward the relevant events for monitoring and investigation.
+Sysmon added detailed endpoint visibility, including process-creation data. The Windows applied-policy snapshot proves Security/Application/System collection, `win-sysmon` reading `Microsoft-Windows-Sysmon/Operational`, `win-defender` reading `Microsoft-Windows-Windows Defender/Operational` with Event IDs `1116,1117,5001`, and Elastic Defend using the `EDRComplete` preset. A separate screenshot shows Defender Event ID `5007` was observed in Elastic; the exported policy itself does not configure `5007`.
 
 ![Figure 2 — Windows telemetry integrations](evidence/telemetry/windows-telemetry-integrations.png)
 
@@ -208,7 +208,7 @@ The Ubuntu system provided:
 - Failed SSH login activity
 - Authentication-outcome fields for failed and accepted events
 
-The SSH telemetry supported failed-login monitoring, detection validation, and analyst investigation.
+The Ubuntu applied-policy snapshot reads `/var/log/auth.log*`, `/var/log/secure*`, `/var/log/messages*`, `/var/log/syslog*`, and `/var/log/system*` into the `system.auth` and `system.syslog` datasets. The SSH telemetry supported failed-login monitoring, detection validation, and analyst investigation.
 
 ![Figure 3 — Healthy Elastic Agents](evidence/telemetry/fleet-agents.png)
 
@@ -318,7 +318,7 @@ Attack Activity → Security Telemetry → Elastic Collection
 
 ## 6. Detection Engineering
 
-Custom threshold-based Elastic Security rules were used to identify repeated SSH and RDP authentication failures.
+Custom threshold-based Elastic Security rules were used to identify repeated SSH failures and Windows failed-logon events. The Windows rule retained its historical RDP-labelled name, but its exported query did not validate RDP Logon Type `10`.
 
 ### 6.1 SSH Brute-Force Detection
 
@@ -329,6 +329,7 @@ Custom threshold-based Elastic Security rules were used to identify repeated SSH
 | Data source | SSH authentication telemetry |
 | Threshold | `5` or more matching failed SSH authentication events |
 | Grouping | `user.name` and `source.ip` |
+| Schedule | Every `5m` with a `10m` lookback (`now-10m`) |
 | Purpose | Identify repeated failed SSH authentication attempts |
 
 Repeated controlled failures reached the configured detection condition and generated an alert. The execution history confirms that the enabled rule ran successfully and processed the available telemetry.
@@ -345,35 +346,39 @@ Repeated controlled failures reached the configured detection condition and gene
 
 [View full-size evidence](evidence/detections/ssh-rule-execution.png)
 
-### 6.2 RDP Brute-Force Detection
+### 6.2 Windows Failed-Logon Detection
 
-| Field | Value |
+The historical rule name `win Rdp brute force` is preserved because that is what appeared in Elastic and osTicket. Its actual exported logic was broader than RDP.
+
+| Field | Exported value |
 | --- | --- |
-| Rule name | `win Rdp brute force` |
+| Historical rule name | `win Rdp brute force` |
 | Platform | Windows |
-| Data source | Windows authentication / RDP-related telemetry |
-| Event filter | Windows Event ID `4625` (failed logon) |
-| Threshold | `2` or more matching failed-authentication events |
+| Query | `event.code: 4625 and agent.name: win and user.name: Mrinal` |
+| Threshold | `2` matching events |
 | Grouping | `source.ip` and `user.name` |
-| Purpose | Identify repeated failed RDP authentication attempts |
+| Schedule | Every `30s` with a `330s` lookback (`now-330s`) |
+| Proven scope | Repeated Windows failed logons matching the agent and username filters |
 
-The rule identified the controlled RDP authentication activity. One Elastic alert snapshot showed **444 medium-severity alerts**, including **440 alerts** attributed to `win Rdp brute force`. This confirmed detection coverage but also exposed a need for tuning.
+Event ID `4625` covers failed Windows logons generally. Because the query did not validate Logon Type `10`, the exported rule does not prove RDP-specific detection even though the controlled test context and historical name were RDP-related.
 
-![Figure 12 — RDP brute-force rule definition](evidence/detections/rdp-rule-definition.png)
+One Elastic snapshot showed **444 medium-severity alerts**, including **440 alerts** attributed to the historically named rule. This proves alert generation and exposes a major tuning problem; it does not establish that all 440 alerts were RDP attempts.
 
-*Figure 12 — Elastic Security definition for the `win Rdp brute force` rule, matching Windows Event ID `4625` and alerting on `2` or more failed-authentication events grouped by `source.ip` and `user.name`.*
+![Figure 12 — Historically named Windows rule definition](evidence/detections/rdp-rule-definition.png)
+
+*Figure 12 — Definition for the historical `win Rdp brute force` rule: Event ID `4625`, threshold `2`, grouped by `source.ip` and `user.name`; no Logon Type `10` filter is present.*
 
 [View full-size evidence](evidence/detections/rdp-rule-definition.png)
 
-![Figure 13 — RDP rule execution](evidence/detections/rdp-rule-execution.png)
+![Figure 13 — Windows rule execution](evidence/detections/rdp-rule-execution.png)
 
-*Figure 13 — Successful scheduled execution history for the enabled `win Rdp brute force` detection rule.*
+*Figure 13 — Successful scheduled execution history for the enabled, historically named Windows failed-logon rule.*
 
 [View full-size evidence](evidence/detections/rdp-rule-execution.png)
 
 ### 6.3 Detection Validation
 
-The SSH and RDP testing demonstrated that:
+The SSH and Windows failed-logon validation demonstrated that:
 
 - Endpoint telemetry was reaching Elasticsearch.
 - Detection rules were processing the relevant authentication events.
@@ -516,7 +521,7 @@ The repeated SSH failures were consistent with controlled failed-login activity 
 
 ---
 
-## 9. Investigation Case 2 — Windows RDP Brute Force
+## 9. Investigation Case 2 — Windows Failed-Logon Alert in RDP Test Context
 
 ### 9.1 Incident Overview
 
@@ -524,21 +529,17 @@ The repeated SSH failures were consistent with controlled failed-login activity 
 | --- | --- |
 | Affected system | Windows VM |
 | Private IP | `10.2.0.4` |
-| Detection rule | `win Rdp brute force` |
-| Activity | Repeated RDP authentication attempts |
-| Environment | Controlled lab simulation |
+| Historical detection-rule name | `win Rdp brute force` |
+| Rule-proven activity | Repeated Event ID `4625` failed logons matching the exported filters |
+| Test context | Controlled RDP reconnaissance and credential testing |
 
-### 9.2 Reconnaissance
+### 9.2 Reconnaissance and Test
 
-Nmap confirmed that the Windows Remote Desktop service was reachable on TCP port `3389` before authentication testing began.
+Nmap confirmed that TCP port `3389` was reachable. Crowbar then generated RDP authentication attempts, but the captured result showed no valid credential and no authenticated RDP access.
 
-### 9.3 Brute-Force Attempt
+### 9.3 Alert Generation
 
-Crowbar generated RDP authentication attempts, but the captured result showed that no valid credential was found. The activity did not establish authenticated RDP access.
-
-### 9.4 Alert Generation
-
-The `win Rdp brute force` rule identified the generated activity. An expanded alert showed:
+The historically named rule generated alerts during the lab validation period. An expanded alert showed:
 
 | Field | Observed value |
 | --- | --- |
@@ -546,49 +547,42 @@ The `win Rdp brute force` rule identified the generated activity. An expanded al
 | Risk score | 47 |
 | Status | Open |
 
-![Figure 16 — RDP brute-force alert details](evidence/detections/rdp-alert-details.png)
+![Figure 16 — Historically named Windows alert](evidence/detections/rdp-alert-details.png)
 
-*Figure 16 — Open, medium-severity Windows RDP brute-force alert with risk score 47 in Elastic Security.*
+*Figure 16 — Open, medium-severity alert with risk score 47 from the historical `win Rdp brute force` rule.*
 
 [View full-size evidence](evidence/detections/rdp-alert-details.png)
 
-### 9.5 Investigation
+The alert name and surrounding RDP test context do not make the rule RDP-specific. The exported query used Event ID `4625` without validating Logon Type `10`.
+
+### 9.4 Investigation
 
 The investigation reviewed the alert timestamp, rule, severity, risk score, username, source information, affected system where present, related authentication activity, and overall alert volume.
 
 External IP-reputation or geographic data, if reviewed, was treated as supporting enrichment rather than definitive proof of identity or malicious intent.
 
-### 9.6 Incident Timeline
+### 9.5 Evidence-Supported Timeline
 
-The evidence-supported sequence was:
+1. RDP service reconnaissance was performed and TCP port `3389` was confirmed open.
+2. Controlled RDP authentication testing began.
+3. Windows authentication telemetry reached Elastic.
+4. The Event ID `4625` threshold rule generated alerts.
+5. The alert and related telemetry were investigated.
+6. An osTicket ticket using the historical rule name was created through the API.
+7. The unsuccessful authentication outcome and rule-specificity limitation were documented.
 
-1. RDP service reconnaissance was performed.
-2. TCP port `3389` was confirmed open.
-3. Controlled RDP authentication testing began.
-4. Windows authentication telemetry reached Elastic.
-5. `win Rdp brute force` generated alerts.
-6. The alert and related telemetry were investigated.
-7. An osTicket incident was generated and reviewed.
-8. The unsuccessful authentication outcome was documented.
-
-### 9.7 Compromise Assessment
-
-The available evidence did not demonstrate successful RDP authentication. Crowbar did not identify a valid credential. The correct conclusion is:
-
-> Controlled RDP brute-force activity was successfully detected, but successful compromise was not confirmed.
-
-### 9.8 Incident Disposition
+### 9.6 Assessment and Disposition
 
 | Field | Disposition |
 | --- | --- |
-| Classification | Controlled RDP brute-force simulation |
-| Detection status | Successfully detected |
-| Authentication outcome | No successful brute-force authentication confirmed |
+| Test classification | Controlled RDP credential-testing attempt |
+| Detection classification | General Windows failed-logon threshold alert |
+| Authentication outcome | No successful RDP authentication confirmed |
 | Investigation status | Reviewed |
-| Escalation | Incident ticket generated in osTicket |
-| Final outcome | Detection and incident workflow validated |
+| Escalation | Basic osTicket ticket generated |
+| Final outcome | Telemetry, alerting, and ticketing workflow validated with a detection-specificity limitation |
 
----
+> The RDP test was confirmed and the Windows failed-logon rule generated alerts, but the rule itself did not prove that every matching event was RDP.
 
 ## 10. Alert Triage and Correlation
 
@@ -611,7 +605,7 @@ The SSH and RDP investigations showed why alerts should not be evaluated in isol
 
 | Platform | Primary activity | Telemetry | Detection |
 | --- | --- | --- | --- |
-| Windows | RDP authentication | Windows authentication, Sysmon, Defender-related events | `win Rdp brute force` |
+| Windows | RDP test context / failed logons | Windows authentication, Sysmon, Defender-related events | General Event ID `4625` threshold rule historically named `win Rdp brute force` |
 | Ubuntu | SSH authentication | Linux system and SSH authentication logs | `SOC ssh brute force` |
 
 ### 10.3 Correlation Value
@@ -622,41 +616,11 @@ Reviewing source, user, timestamp, host, authentication result, and related even
 
 ## 11. Automated osTicket Incident Creation
 
-Elastic Security was integrated with osTicket so that detections could automatically create incident tickets.
+Elastic Security was integrated with osTicket so that rule actions could create basic API tickets automatically.
 
-### 11.1 osTicket Setup
+### 11.1 Connector Configuration
 
-osTicket was hosted on MyVm at private IP `10.1.0.5`. Its API was configured to accept ticket-creation requests from the Elastic integration.
-
-### 11.2 API and Connector Configuration
-
-An osTicket API key was created for the integration. In Kibana, a webhook connector and request body were configured through:
-
-```text
-Stack Management → Connectors → Webhook Connector
-```
-
-Secrets and active credentials are intentionally omitted from this report.
-
-### 11.3 Automation Workflow
-
-```text
-Elastic Detection Rule
-        ↓
-Security Alert
-        ↓
-Webhook Connector
-        ↓
-osTicket API
-        ↓
-Automatic Incident Ticket
-        ↓
-Analyst Review and Closure
-```
-
-### 11.4 Connector Troubleshooting
-
-Troubleshooting covered osTicket installation, PHP configuration, database setup, MariaDB/MySQL issues, connector failures, webhook changes, and connector testing. The connector eventually completed a successful test.
+osTicket was hosted on MyVm at private IP `10.1.0.5`. Kibana used a webhook connector with POST requests to the osTicket ticket API and a custom API-key header.
 
 ![Figure 17 — Successful osTicket connector test](evidence/automation/osticket-connector-test-success.png)
 
@@ -664,25 +628,33 @@ Troubleshooting covered osTicket installation, PHP configuration, database setup
 
 [View full-size evidence](evidence/automation/osticket-connector-test-success.png)
 
-### 11.5 Automatic Ticket Creation
+### 11.2 Rule Action and Ticket Body
 
-Once the connector was functioning, SSH and RDP detections generated incident tickets through the API workflow.
+Both exported rules referenced the `osticket` webhook connector. The request body created an API ticket whose subject was the rule name and whose message was essentially:
 
-![Figure 18 — Automatically generated osTicket incidents](evidence/automation/osticket-ticket-list.png)
+```text
+Investigate Rule: <rule name>
+```
 
-*Figure 18 — osTicket queue containing automatically generated `SOC ssh brute force` and `win Rdp brute force` incidents.*
+This is useful basic ticket creation, but it is not full SOAR. The demonstrated body did not include source IP, host, severity, alert URL, enrichment, assignment logic, retry handling, containment, or automated closure.
+
+### 11.3 API-Created Tickets
+
+![Figure 18 — Automatically generated osTicket tickets](evidence/automation/osticket-ticket-list.png)
+
+*Figure 18 — osTicket queue containing API-created tickets for `soc ssh brute force` and the historically named `win Rdp brute force` rule.*
 
 [View full-size evidence](evidence/automation/osticket-ticket-list.png)
 
-### 11.6 Incident Handling
+The Windows ticket inherited the historical rule name. That ticket label does not prove that the underlying Event ID `4625` detection was RDP-specific.
 
-Tickets were reviewed alongside the corresponding Elastic alert and telemetry. After the controlled activity was investigated, the related incident workflow was completed.
+### 11.4 Handling Boundary
+
+An analyst still needed to open Elastic, review the corresponding alert and telemetry, investigate, and manage ticket disposition. Automated enrichment and response actions were not demonstrated.
 
 ```text
-Detection → Escalation → Incident Tracking → Investigation → Disposition
+Elastic Rule Action → Webhook POST → osTicket API → Basic Ticket → Analyst Review
 ```
-
----
 
 ## 12. SOC Dashboard and Monitoring
 
@@ -703,7 +675,7 @@ The monitoring dashboard included:
 
 ### 12.2 Dashboard Value
 
-The dashboard made it easier to identify authentication-failure spikes, repeated attempts, high-volume sources, changes over time, and patterns requiring investigation.
+The dashboard made it easier to identify SSH failure spikes, repeated attempts, high-volume sources, changes over time, and patterns requiring investigation. The real export contains only the two SSH panels listed above; it does not contain Windows, alert, Defender, or osTicket panels.
 
 ### 12.3 Geographic Visualization
 
@@ -715,12 +687,12 @@ GeoIP-enriched visualization was also tested. Geographic data was treated as con
 
 ### 13.1 Alert Volume
 
-One Elastic snapshot showed 444 medium-severity alerts, with 440 attributed to the RDP rule. The rule was detecting activity, but the high volume demonstrated that detection coverage and detection quality are not the same.
+One Elastic snapshot showed 444 medium-severity alerts, with 440 attributed to the historically named Windows rule. The high volume demonstrated that alert generation and detection quality are not the same.
 
 ### 13.2 Tuning Opportunities
 
 - Validate the SSH threshold of `5` failed events grouped by `user.name` and `source.ip` against both attack simulations and normal activity.
-- Validate the RDP threshold of `2` failed events grouped by `source.ip` and `user.name` against both attack simulations and normal activity.
+- Validate the Windows failed-logon threshold of `2` grouped by `source.ip` and `user.name`; add Logon Type `10` only in a future RDP-specific rule rather than rewriting the historical export.
 - Review each rule's detection window and interval.
 - Suppress repetitive alerts representing the same incident.
 - Account for expected administrative behavior.
@@ -742,12 +714,12 @@ A useful detection should identify meaningful suspicious behavior without creati
 | 3 | Windows telemetry | Authentication, Sysmon, Defender, and RDP-related data was available. |
 | 4 | Ubuntu telemetry | Linux system and SSH authentication events were searchable. |
 | 5 | SSH detection | Repeated controlled SSH failures generated an alert. |
-| 6 | RDP detection | Controlled RDP authentication activity generated alerts. |
+| 6 | Windows detection | The historically named Event ID `4625` rule generated alerts; RDP specificity was not proven by its query. |
 | 7 | RDP compromise assessment | No valid credentials or authenticated access were confirmed. |
 | 8 | Investigation workflow | Alert fields and underlying raw events were reviewed and correlated. |
-| 9 | Incident automation | Elastic alerts generated osTicket incidents through the API workflow. |
+| 9 | Ticket automation | Rule actions generated basic osTicket API tickets; full SOAR enrichment was not demonstrated. |
 | 10 | Dashboard monitoring | Authentication trends and top sources were visualized in Kibana. |
-| 11 | Detection tuning | High RDP alert volume identified threshold and suppression improvements. |
+| 11 | Detection tuning | High Windows failed-logon alert volume identified threshold and suppression improvements. |
 | 12 | Mythic testing | C2 profile and payload configuration were completed, but callback success was not confirmed. |
 
 ---
@@ -760,6 +732,8 @@ A useful detection should identify meaningful suspicious behavior without creati
 - The RDP brute-force test did not produce confirmed authenticated access.
 - The Mythic evidence does not conclusively demonstrate a successful callback.
 - Detection rules were functional but not fully tuned for production-scale alert volume.
+- The historical Windows rule did not validate Logon Type `10` and therefore was not RDP-specific.
+- The osTicket integration created basic tickets but did not demonstrate full SOAR enrichment or automated response.
 - Some attribution required correlation across source IP, username, host, and timestamp.
 
 ---
@@ -833,7 +807,7 @@ An alert alone does not explain a complete incident. Understanding what occurred
 
 ### 17.5 Detection Engineering
 
-A large alert count does not automatically mean a detection is well designed. The RDP alert volume highlighted the need to balance detection coverage with analyst workload.
+A large alert count does not automatically mean a detection is well designed. The historically named Windows rule's alert volume highlighted the need to balance detection coverage with analyst workload.
 
 ### 17.6 Automation
 
@@ -853,7 +827,7 @@ The Mythic portion provided experience with C2 profile configuration and Apollo 
 
 The Azure ELK SOC Security Lab provided practical experience building and operating a multi-platform security-monitoring environment in Microsoft Azure. Windows and Ubuntu acted as telemetry sources; Elastic Agent collected their events; Fleet Server managed the agents; Elasticsearch stored and indexed the data; and Kibana and Elastic Security supported search, detection, investigation, and visualization.
 
-Controlled SSH and RDP activity generated realistic security telemetry. Custom rules generated alerts that were investigated through both alert details and underlying raw events. Elastic was integrated with osTicket so that detections could create trackable incidents automatically, while Kibana dashboards summarized authentication failures and high-volume sources.
+Controlled SSH and RDP activity generated realistic security telemetry. The SSH rule and general Windows failed-logon rule generated alerts that were investigated through alert details and underlying raw events. Elastic created basic osTicket tickets through a webhook action, while the demonstrated Kibana dashboard summarized SSH failures and source IPs.
 
 The Mythic component added C2 configuration and Apollo payload-testing experience, although a successful callback was not confirmed. The project therefore demonstrates not only successful technical outcomes, but also evidence-based reporting of unsuccessful and inconclusive test results.
 
@@ -898,7 +872,7 @@ The report is supported by screenshot evidence stored in the repository's `evide
 - **Azure:** VM inventory, networking, address spaces, subnets, and VNet peering
 - **Telemetry:** Fleet enrollment, Windows integrations, Sysmon, Defender, and Ubuntu SSH events
 - **Attack simulation:** RDP reconnaissance, Crowbar testing, Mythic C2 profile, and payload creation
-- **Detections:** SSH and RDP execution history and alert evidence
+- **Detections:** SSH and historically named Windows failed-logon execution history and alert evidence
 - **Investigations:** SSH event details, user/source pivots, and failed-authentication analysis
 - **Automation:** Connector validation and automatically generated osTicket incidents
 - **Dashboards:** Authentication trends, top sources, and the final SOC dashboard
@@ -921,6 +895,7 @@ Before publishing new or replacement screenshots:
 - [Project overview](README.md)
 - [Environment](environment/)
 - [Telemetry](telemetry/)
+- [Reusable artifacts](artifacts/)
 - [Attack simulation](attack-simulation/)
 - [Detections](detections/)
 - [Investigations](investigations/)
