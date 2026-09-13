@@ -1,6 +1,8 @@
-# Detection Engineering
+# Detection Rules and Validation
 
 The lab used two custom Elastic Security threshold rules. Their historical names are preserved, but the exported logic—not the name—defines what each rule actually detects.
+
+This section documents how the rules behaved in the lab and what the evidence proves. It is not presented as advanced detection-engineering work.
 
 ## SSH Brute-Force Detection
 
