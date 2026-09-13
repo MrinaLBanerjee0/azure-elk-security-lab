@@ -35,7 +35,7 @@ Elastic Agents send endpoint telemetry to Elasticsearch. Fleet Server manages en
 | Apollo payload creation was configured | [Payload creation](attack-simulation/mythic-payload-creation.png) | Apollo payload build configuration was completed | Does not prove execution or successful delivery |
 | A payload artifact appeared in Mythic | [Mythic payload](attack-simulation/mythic-payload.png) | The created payload was listed in the interface | No active callback, session, or post-exploitation is claimed |
 
-## Detection Engineering
+## Detection Rule Evidence
 
 | Claim | Evidence | What it proves | Boundary |
 | --- | --- | --- | --- |
