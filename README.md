@@ -1,98 +1,102 @@
 # Azure ELK Security Lab
 
-An evidence-backed SOC lab built in Microsoft Azure to demonstrate the analyst workflow from controlled security activity to centralized telemetry, custom detections, investigation, basic automated ticketing, and dashboard monitoring.
+This was my first larger SOC lab. I built it in Microsoft Azure and used Elastic Security to collect Windows and Linux telemetry, create detections, investigate controlled activity, and connect basic alerting to osTicket.
 
-[Read the full investigation report](SOC-INVESTIGATION-REPORT.md) · [Review the evidence index](evidence/) · [Inspect exported artifacts](artifacts/) · [Open the editable architecture](diagrams/Diagram.svg)
+[Investigation report](SOC-INVESTIGATION-REPORT.md) · [Evidence](evidence/) · [Exported artifacts](artifacts/) · [Architecture diagram](diagrams/Diagram.svg)
 
-## Recruiter Summary
+## What I built
 
-| Area | Demonstrated outcome |
+| Area | What I worked on |
 | --- | --- |
-| Cloud architecture | Six Azure VMs across three regional VNets with two documented hub-to-spoke peerings |
-| Telemetry | Windows Security, Sysmon, Defender, Linux system, and SSH events centralized in Elastic |
-| Detection | Custom SSH and Windows failed-logon threshold rules executed and generated alerts |
-| Investigation | Alert review, raw-event analysis, source/user pivots, and evidence-based disposition |
-| Automation | Elastic webhook/API actions created basic osTicket tickets for both custom rules |
-| Monitoring | Kibana visualizations tracked SSH failures over time and top SSH source IPs |
-| Adversary simulation | Controlled SSH and RDP testing; Mythic HTTP profile and Apollo payload configured |
+| Cloud | Six Azure VMs across three regional VNets with two documented hub-to-spoke peerings |
+| Telemetry | Windows Security, Sysmon, Defender, Linux system, and SSH events in Elastic |
+| Detection | Custom SSH and Windows failed-logon threshold rules |
+| Investigation | Alert review, raw-event analysis, source/user pivots, and disposition |
+| Automation | Basic Elastic webhook/API actions that created osTicket tickets |
+| Monitoring | Kibana views for SSH failures over time and top SSH source IPs |
+| Controlled testing | SSH and RDP testing; Mythic HTTP profile and Apollo payload configuration |
 
 ## Architecture
 
 ![Azure ELK Security Lab architecture](diagrams/Diagram.png)
 
-The diagram distinguishes Azure VNet peering, endpoint telemetry, Fleet management, controlled test activity, alert-to-ticket automation, and the unconfirmed Mythic callback path.
+The diagram shows the Azure networking, endpoint telemetry, Fleet management, controlled test activity, alert-to-ticket flow, and the Mythic path I configured but did not successfully validate with a callback.
 
-## Validated SOC Workflow
+## Main workflow
 
 ```text
-Controlled Activity → Endpoint Telemetry → Elasticsearch
-        → Detection → Alert → Investigation → osTicket Ticket
-        → Dashboard Review → Tuning Findings
+Controlled activity → endpoint telemetry → Elasticsearch
+        → detection → alert → investigation → osTicket ticket
+        → dashboard review → tuning findings
 ```
 
-### SSH Use Case
+### SSH test
 
-- Controlled failed SSH logons originated from myVm (`10.1.0.5`) and targeted Ubuntu (`10.1.0.4`).
-- Linux authentication events were collected through Elastic Agent.
+- I generated controlled failed SSH logons from myVm (`10.1.0.5`) to Ubuntu (`10.1.0.4`).
+- Elastic Agent collected the Linux authentication events.
 - The rule threshold was `5`, grouped by `user.name` and `source.ip`, running every `5m` with a `10m` lookback.
-- The alert was investigated using underlying events and user/source pivots.
+- I reviewed the underlying events and pivoted on the user and source IP.
 - The webhook action created a basic osTicket ticket.
 
-### Windows / RDP Test Context
+### Windows / RDP test
 
-- Kali performed authorized reconnaissance and unsuccessful RDP authentication testing against the Windows endpoint.
-- Windows failed-logon telemetry reached Elastic during the controlled test.
-- The historical rule name was `win Rdp brute force`, but its exported query was only `event.code: 4625 and agent.name: win and user.name: Mrinal`.
-- The rule threshold was `2`, grouped by `source.ip` and `user.name`, running every `30s` with a `330s` lookback.
-- Because the query did not validate Logon Type `10`, the rule itself was a general Windows failed-logon rule—not a proven RDP-specific detection.
-- No valid credential or successful RDP session was confirmed.
+- Kali was used for authorized reconnaissance and unsuccessful RDP authentication testing against the Windows endpoint.
+- Windows failed-logon events reached Elastic during the test.
+- The historical rule was named `win Rdp brute force`, but its exported query was only `event.code: 4625 and agent.name: win and user.name: Mrinal`.
+- The threshold was `2`, grouped by `source.ip` and `user.name`, running every `30s` with a `330s` lookback.
+- Because the query did not check Logon Type `10`, I do not present this as a proven RDP-specific detection. It was a general Windows failed-logon rule used during an RDP-related test.
+- I did not confirm a valid credential or successful RDP session.
 
-## Technology Stack
+## Technology used
 
 | Layer | Technology |
 | --- | --- |
 | Cloud and networking | Microsoft Azure, VNets, subnets, VNet peering |
 | Collection and management | Elastic Agent, Fleet Server |
-| Data and analytics | Elasticsearch, Kibana, Elastic Security |
+| SIEM / analytics | Elasticsearch, Kibana, Elastic Security |
 | Windows telemetry | Security/Application/System logs, Sysmon, Microsoft Defender, Elastic Defend |
 | Linux telemetry | System and SSH authentication logs |
 | Controlled testing | Kali Linux, Nmap, Crowbar, Mythic, Apollo |
 | Case management | osTicket, webhook/API connector |
 
-## Evidence-Backed Results
+## What I verified
 
-- Healthy Fleet enrollment was captured for the Windows, Ubuntu, and Fleet hosts.
+- I captured healthy Fleet enrollment for the Windows, Ubuntu, and Fleet hosts.
 - The Windows applied-policy snapshot includes Security/Application/System collection, `win-sysmon`, `win-defender`, and Elastic Defend with the `EDRComplete` preset.
-- The exported Defender input configures Event IDs `1116`, `1117`, and `5001`. It does not configure `5007`; a separate Kibana screenshot shows Event ID `5007` was observed in collected data.
+- The exported Defender input contains Event IDs `1116`, `1117`, and `5001`. It does not contain `5007`; a separate Kibana screenshot shows that Event ID `5007` was still observed in collected data.
 - The Ubuntu applied policy reads `/var/log/auth.log*`, `/var/log/secure*`, `/var/log/messages*`, `/var/log/syslog*`, and `/var/log/system*` into `system.auth` and `system.syslog`.
 - Both custom validation rules executed and generated alerts.
-- The Elastic-to-osTicket connector test succeeded, and API-created tickets were captured.
+- The Elastic-to-osTicket connector test succeeded, and the API-created tickets were captured.
 - The dashboard export contains two `logs-*` panels: SSH failures over time and top SSH source IPs.
-- Mythic profile and payload creation were completed, but an active Apollo callback was not proven.
+- I configured the Mythic HTTP profile and created an Apollo payload, but I did **not** prove an active Apollo callback or session.
 
-## Exported Configuration Artifacts
+## Exported artifacts
 
-The [`artifacts/`](artifacts/) directory contains the real Kibana dashboard export, a credential-sanitized rules/connector export, Windows and Ubuntu applied Fleet-policy snapshots, and the third-party Sysmon configuration used in the lab. These are exported configuration artifacts, not drop-in production templates: the rule queries preserve the historical lab values `agent.name: ubantu`, `agent.name: win`, and `user.name: Mrinal`; the thresholds and schedules require environment-specific tuning; the connector retains a private lab URL and requires a new API key. The API-key value is the only field changed in the sanitized NDJSON; the historical rule names, descriptions, queries, thresholds, schedules, grouping, and actions remain unchanged.
+The [`artifacts/`](artifacts/) folder contains the Kibana dashboard export, a sanitized rules/connector export, Windows and Ubuntu Fleet-policy snapshots, and the Sysmon configuration used in the lab.
 
-## Scope and Limitations
+These are historical lab artifacts, not production-ready templates. Some values are intentionally left as they existed in the lab, including `agent.name: ubantu`, `agent.name: win`, and `user.name: Mrinal`. The thresholds and schedules would need retuning for another environment. The connector keeps the private lab URL but the API key was replaced with `REDACTED`.
 
-This is a controlled learning environment, not a production SOC. It does not demonstrate 24/7 operations, production-scale tuning, a successful RDP compromise, a successful Mythic callback, full SOAR orchestration, or case lifecycle metrics. The osTicket action body was basic—essentially `Investigate Rule: <rule name>`—and one captured view showed 440 alerts from the historically named Windows rule out of 444 medium-severity alerts, so suppression and tuning remain necessary.
+## Limitations
 
-## Repository Guide
+This was a learning environment, not a production SOC. It does not demonstrate 24/7 operations, production-scale tuning, a successful RDP compromise, a successful Mythic callback, full SOAR orchestration, or mature case-management metrics.
+
+The osTicket action body was basic: essentially `Investigate Rule: <rule name>`. One captured view also showed 440 alerts from the historically named Windows rule out of 444 medium-severity alerts, which is a clear sign that the rule needed more suppression and tuning.
+
+## Repository guide
 
 | Section | Contents |
 | --- | --- |
 | [Environment](environment/) | VM inventory, VNets, subnets, regions, and peerings |
-| [Telemetry](telemetry/) | Windows/Linux collection and Fleet control-plane boundaries |
+| [Telemetry](telemetry/) | Windows/Linux collection and Fleet details |
 | [Attack simulation](attack-simulation/) | Controlled RDP testing and Mythic configuration |
-| [Detections](detections/) | Exact SSH and Windows failed-logon rule behavior |
+| [Detections](detections/) | SSH and Windows failed-logon rule behavior |
 | [Investigations](investigations/) | Event review and analyst pivots |
 | [Automation](automation/) | Basic Elastic-to-osTicket ticket creation |
 | [Dashboards](dashboards/) | SSH monitoring visualizations |
-| [Artifacts](artifacts/) | Exported configurations, applied-policy snapshots, and attributed Sysmon configuration |
-| [Evidence](evidence/) | Claim-to-evidence map with proof boundaries |
-| [Full report](SOC-INVESTIGATION-REPORT.md) | End-to-end findings, timelines, limitations, and lessons learned |
+| [Artifacts](artifacts/) | Exports, applied-policy snapshots, and Sysmon configuration |
+| [Evidence](evidence/) | Screenshots and claim-to-proof mapping |
+| [Full report](SOC-INVESTIGATION-REPORT.md) | Timeline, findings, limitations, and lessons learned |
 
-## Security and Evidence Handling
+## Security note
 
-The rules export contains one redaction: the original osTicket API-key value was replaced with `REDACTED`. No detection logic was silently improved. Screenshots and configuration files are described only to the limit of what they directly prove.
+The rules export has one intentional redaction: the original osTicket API-key value was replaced with `REDACTED`. I did not silently change the detection logic while sanitizing the file.
