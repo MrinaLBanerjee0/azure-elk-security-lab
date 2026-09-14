@@ -1,90 +1,92 @@
 # Evidence Index
 
-This index maps each material project claim to the screenshot that supports it and states what the image does **not** prove. The evidence demonstrates observed lab activity; it is not a replacement for exported rules, configurations, or infrastructure-as-code.
+I kept the main screenshots here so the project claims can be checked quickly. The third column says what I used each screenshot for, and the last column calls out the main thing the screenshot cannot establish on its own.
 
-[Return to project overview](../README.md) · [Read the full investigation report](../SOC-INVESTIGATION-REPORT.md)
+[Back to the project README](../README.md) · [Full investigation report](../SOC-INVESTIGATION-REPORT.md)
 
 ## Infrastructure
 
-| Claim | Evidence | What it proves | Boundary |
+| Claim | Screenshot | What I can verify from it | Important limit |
 | --- | --- | --- | --- |
-| Six Azure VMs were used | [VM inventory](azure/azure-vm-inventory.png) | Captured VM inventory and deployment context | Does not by itself prove service health |
-| Hub-to-spoke peerings existed | [VNet peerings](azure/azure-vnet-peerings.png) | The two documented peerings involving `elaskiba-vnet` | No direct `ubuntu-vnet ↔ win-vnet` peering is claimed |
-| Elaskiba used the documented private network | [Elaskiba network](azure/elaskiba-network.png) | Elaskiba network interface, private IP, subnet, and VNet context | Does not prove every route or NSG rule |
-| myVm used the documented private network | [myVm network](azure/myvm-network.png) | myVm network interface, private IP, subnet, and VNet context | Does not prove direct connectivity to the Windows spoke |
+| Six Azure VMs were used | [VM inventory](azure/azure-vm-inventory.png) | VM inventory and deployment context | VM presence alone does not prove service health |
+| Hub-to-spoke peerings existed | [VNet peerings](azure/azure-vnet-peerings.png) | The two documented peerings involving `elaskiba-vnet` | I do not claim a direct `ubuntu-vnet ↔ win-vnet` peering |
+| Elaskiba used the documented private network | [Elaskiba network](azure/elaskiba-network.png) | Elaskiba NIC, private IP, subnet, and VNet context | This does not show every route or NSG rule |
+| myVm used the documented private network | [myVm network](azure/myvm-network.png) | myVm NIC, private IP, subnet, and VNet context | This does not prove direct connectivity to the Windows spoke |
 
 ## Telemetry and Fleet
 
-| Claim | Evidence | What it proves | Boundary |
+| Claim | Screenshot | What I can verify from it | Important limit |
 | --- | --- | --- | --- |
-| Agents were enrolled and healthy | [Fleet agents](telemetry/fleet-agents.png) | Captured healthy status for `win`, `ubuntu`, and `fleet` | Health at capture time is not continuous availability |
-| Windows integrations were configured | [Windows integrations](telemetry/windows-telemetry-integrations.png) | The Windows policy included System, Defender, Sysmon, and Elastic Defend integrations | Configuration does not prove every dataset was populated |
-| Sysmon process telemetry arrived | [Sysmon process create](telemetry/sysmon-process-create.png) | A Sysmon Event ID `1` process-create event was searchable | One event does not establish complete Sysmon coverage |
-| Defender telemetry arrived | [Defender events](telemetry/windows-defender-events.png) | Defender Event ID `5007` records were searchable | Observed data is separate from the policy export, which configures `1116`, `1117`, and `5001` |
-| Ubuntu SSH events arrived | [Ubuntu SSH events](telemetry/ubuntu-ssh-events.png) | SSH authentication activity was ingested from Ubuntu | Does not alone establish attack intent |
+| Agents were enrolled and healthy | [Fleet agents](telemetry/fleet-agents.png) | `win`, `ubuntu`, and `fleet` were healthy when captured | A screenshot is only a point-in-time health check |
+| Windows integrations were configured | [Windows integrations](telemetry/windows-telemetry-integrations.png) | The Windows policy included System, Defender, Sysmon, and Elastic Defend | Configuration alone does not prove every dataset had data |
+| Sysmon process telemetry arrived | [Sysmon process create](telemetry/sysmon-process-create.png) | A Sysmon Event ID `1` process-create event was searchable | One event is not proof of complete Sysmon coverage |
+| Defender telemetry arrived | [Defender events](telemetry/windows-defender-events.png) | Defender Event ID `5007` records were searchable | The policy export itself configures `1116`, `1117`, and `5001`; this is separate observed data |
+| Ubuntu SSH events arrived | [Ubuntu SSH events](telemetry/ubuntu-ssh-events.png) | SSH authentication activity was ingested from Ubuntu | The log event does not tell me intent by itself |
 
-Elastic Agents send endpoint telemetry to Elasticsearch. Fleet Server manages enrollment, policy delivery, integrations, actions, status, and health; it is not shown as the telemetry relay or analysis engine.
+Elastic Agents send the endpoint data to Elasticsearch. Fleet Server is used for enrollment, policies, integrations, actions, status, and health; I am not presenting it as the telemetry relay or analysis engine.
 
-## Controlled Attack Simulation
+## Controlled attack simulation
 
-| Claim | Evidence | What it proves | Boundary |
+| Claim | Screenshot | What I can verify from it | Important limit |
 | --- | --- | --- | --- |
-| RDP service reconnaissance occurred | [RDP reconnaissance](attack-simulation/rdp-reconnaissance.png) | Authorized scanning identified the RDP service | An open port does not prove access or compromise |
+| RDP service reconnaissance occurred | [RDP reconnaissance](attack-simulation/rdp-reconnaissance.png) | Authorized scanning identified the RDP service | An open port is not proof of access or compromise |
 | RDP authentication testing occurred | [Crowbar RDP attempt](attack-simulation/rdp-bruteforce-attempt.png) | Controlled credential testing was attempted | No valid credential or authenticated session was found |
-| Mythic HTTP profile was configured | [Mythic C2 profile](attack-simulation/mythic-c2-profile.png) | HTTP C2 profile configuration existed | Does not prove an endpoint callback |
-| Apollo payload creation was configured | [Payload creation](attack-simulation/mythic-payload-creation.png) | Apollo payload build configuration was completed | Does not prove execution or successful delivery |
-| A payload artifact appeared in Mythic | [Mythic payload](attack-simulation/mythic-payload.png) | The created payload was listed in the interface | No active callback, session, or post-exploitation is claimed |
+| Mythic HTTP profile was configured | [Mythic C2 profile](attack-simulation/mythic-c2-profile.png) | An HTTP C2 profile existed | This does not prove an endpoint callback |
+| Apollo payload creation was configured | [Payload creation](attack-simulation/mythic-payload-creation.png) | Apollo payload build configuration was completed | This does not prove execution or successful delivery |
+| A payload artifact appeared in Mythic | [Mythic payload](attack-simulation/mythic-payload.png) | The created payload was listed in Mythic | I do not claim an active callback, session, or post-exploitation |
 
-## Detection Rule Evidence
+## Detection rule evidence
 
-| Claim | Evidence | What it proves | Boundary |
+| Claim | Screenshot | What I can verify from it | Important limit |
 | --- | --- | --- | --- |
-| SSH and Windows failed-logon rules existed | [Rules overview](detections/detection-rules-overview.png) | Custom rules were present in Elastic Security | Presence does not prove logic quality or coverage |
-| SSH threshold settings were captured | [SSH rule definition](detections/ssh-rule-definition.png) | The lab SSH rule used a threshold of five grouped by source IP and username | Lab validation settings require normal-traffic tuning |
-| SSH rule executed | [SSH rule execution](detections/ssh-rule-execution.png) | The rule ran successfully on its schedule | Successful execution does not mean useful alert precision |
-| SSH alert was generated | [SSH alert](detections/ssh-alert.png) | The controlled SSH activity produced an alert | Alert alone does not prove malicious intent |
-| Windows failed-logon settings were captured | [RDP rule definition](detections/rdp-rule-definition.png) | The lab rule used Event ID `4625`, threshold two, grouped by source IP and username | Event `4625` is not RDP-specific without validating Logon Type `10` |
-| Windows failed-logon rule executed | [RDP rule execution](detections/rdp-rule-execution.png) | The rule ran successfully on its schedule | Does not demonstrate production-quality tuning |
-| A related alert was generated | [RDP alert details](detections/rdp-alert-details.png) | A medium-severity, risk-score `47` alert was captured | Does not prove successful RDP authentication |
-| Alert volume was visible | [Alerts overview](detections/alerts-overview.png) | Captured alert distribution and high volume from the historically named Windows rule | High volume indicates tuning and suppression work remains |
+| SSH and Windows failed-logon rules existed | [Rules overview](detections/detection-rules-overview.png) | Custom rules were present in Elastic Security | Rule presence says nothing about detection quality by itself |
+| SSH threshold settings were captured | [SSH rule definition](detections/ssh-rule-definition.png) | Threshold `5`, grouped by source IP and username | These were lab settings and would need tuning against normal traffic |
+| SSH rule executed | [SSH rule execution](detections/ssh-rule-execution.png) | The rule ran successfully on schedule | Successful execution does not mean good precision |
+| SSH alert was generated | [SSH alert](detections/ssh-alert.png) | The controlled SSH activity produced an alert | An alert is not proof of malicious intent |
+| Windows failed-logon settings were captured | [RDP rule definition](detections/rdp-rule-definition.png) | Event ID `4625`, threshold `2`, grouped by source IP and username | `4625` is not RDP-specific unless Logon Type `10` is checked |
+| Windows failed-logon rule executed | [RDP rule execution](detections/rdp-rule-execution.png) | The rule ran successfully on schedule | This does not demonstrate production-quality tuning |
+| A related alert was generated | [RDP alert details](detections/rdp-alert-details.png) | A medium-severity, risk-score `47` alert was captured | This is not proof of successful RDP authentication |
+| Alert volume was visible | [Alerts overview](detections/alerts-overview.png) | The screenshot shows high alert volume from the historically named Windows rule | The volume itself shows that more tuning/suppression was needed |
 
 ## Investigation
 
-| Claim | Evidence | What it proves | Boundary |
+| Claim | Screenshot | What I can verify from it | Important limit |
 | --- | --- | --- | --- |
-| An SSH event was reviewed in detail | [SSH event detail](investigations/ssh-event-detail.png) | Event fields, source, user, process, location context, and outcome were inspected | GeoIP is enrichment, not identity proof |
-| The analyst pivoted on user and source | [User/source pivot](investigations/ssh-user-source-pivot.png) | The dataset was narrowed using investigation fields | A filtered view is not a complete incident timeline |
-| Failed SSH activity was isolated | [Failed-auth analysis](investigations/ssh-failed-auth-analysis.png) | Repeated failed authentication events were reviewed | Does not prove credential compromise |
+| An SSH event was reviewed in detail | [SSH event detail](investigations/ssh-event-detail.png) | Event fields, source, user, process, location context, and outcome were inspected | GeoIP is enrichment, not proof of actor identity |
+| I pivoted on user and source | [User/source pivot](investigations/ssh-user-source-pivot.png) | The data was narrowed using investigation fields | A filtered view is not the whole incident timeline |
+| Failed SSH activity was isolated | [Failed-auth analysis](investigations/ssh-failed-auth-analysis.png) | Repeated failed authentication events were reviewed | This does not prove credential compromise |
 
-The PDF-derived evidence identifies myVm (`10.1.0.5`) as the controlled SSH source and Ubuntu (`10.1.0.4`) as the target. Kali is used for the controlled Windows/RDP test, not the SSH test.
+The supporting evidence identifies myVm (`10.1.0.5`) as the controlled SSH source and Ubuntu (`10.1.0.4`) as the target. Kali was used for the Windows/RDP test, not the SSH test.
 
-## Automation and Incident Tracking
+## Automation and incident tracking
 
-| Claim | Evidence | What it proves | Boundary |
+| Claim | Screenshot | What I can verify from it | Important limit |
 | --- | --- | --- | --- |
-| A webhook connector was configured | [Connector configuration](automation/osticket-connector-configuration.png) | Connector name, POST method, endpoint, and header configuration were present | The screenshot does not expose or validate the API-key value |
-| Elastic could reach the ticket API | [Connector test](automation/osticket-connector-test-success.png) | The osTicket connector test returned success | Does not test retries, failure handling, or secret rotation |
-| Security tickets existed in osTicket | [Ticket list](automation/osticket-ticket-list.png) | SSH and historically RDP-labelled tickets were present | Does not prove assignment, SLA, or closure |
+| A webhook connector was configured | [Connector configuration](automation/osticket-connector-configuration.png) | Connector name, POST method, endpoint, and header configuration | The screenshot does not expose or validate the API-key value |
+| Elastic could reach the ticket API | [Connector test](automation/osticket-connector-test-success.png) | The connector test returned success | This does not test retries, failure handling, or secret rotation |
+| Security tickets existed in osTicket | [Ticket list](automation/osticket-ticket-list.png) | SSH and historically RDP-labelled tickets were present | It does not prove assignment, SLA, or closure workflow |
 | A historically RDP-labelled ticket was created | [Windows API ticket](automation/rdp-api-ticket.png) | The API created a ticket with the historical rule name and basic investigation message | The ticket does not prove RDP specificity or enriched alert context |
-| An SSH ticket was created | [SSH API ticket](automation/ssh-api-ticket.png) | The API created a ticket with the SSH rule name and basic investigation message | Does not prove enrichment or downstream response actions |
+| An SSH ticket was created | [SSH API ticket](automation/ssh-api-ticket.png) | The API created a ticket with the SSH rule name and basic message | This does not show enrichment or downstream response actions |
 
 ## Dashboards
 
-| Claim | Evidence | What it proves | Boundary |
+| Claim | Screenshot | What I can verify from it | Important limit |
 | --- | --- | --- | --- |
-| A SOC dashboard was assembled | [Monitoring dashboard](dashboards/elk-soc-monitoring-dashboard.png) | A dashboard combined SSH failure trend and top-source panels | Current dashboard coverage is SSH-focused |
-| SSH failures were trended | [Failures over time](dashboards/ssh-failures-over-time.png) | Failed SSH events were visualized across time | Does not measure detection quality by itself |
-| Top SSH sources were ranked | [Top source IPs](dashboards/top-source-ip-visualization.png) | High-volume source addresses were visualized | Source IP alone does not establish actor identity |
+| A SOC dashboard was assembled | [Monitoring dashboard](dashboards/elk-soc-monitoring-dashboard.png) | The dashboard combined SSH failure trend and top-source panels | The current dashboard is mainly SSH-focused |
+| SSH failures were trended | [Failures over time](dashboards/ssh-failures-over-time.png) | Failed SSH events were plotted across time | A chart by itself does not measure detection quality |
+| Top SSH sources were ranked | [Top source IPs](dashboards/top-source-ip-visualization.png) | High-volume source addresses were visualized | Source IP alone does not identify an actor |
 
-## Exported Configuration Artifact Corroboration
+## Exported artifacts
 
-- [Rules and connector export](../artifacts/detections/custom-rules-and-osticket-connector.sanitized.ndjson): exact historical rule logic with only the API-key value redacted.
-- [Dashboard export](../artifacts/dashboards/elk-soc-monitoring-dashboard.ndjson): real Kibana saved objects using `logs-*`.
-- [Windows applied policy](../artifacts/fleet/windows-applied-policy.yml): exact Windows/System/Sysmon/Defender/Elastic Defend inputs.
-- [Ubuntu applied policy](../artifacts/fleet/ubuntu-applied-policy.yml): exact Linux log paths and datasets.
-- [Sysmon configuration](../artifacts/sysmon/sysmon-modular-balanced.xml): third-party balanced config attributed to Olaf Hartong/Sysmon Modular.
+The screenshots are not the only evidence in the repo. I also kept the configuration exports that were available from the lab:
 
-## Evidence Status Summary
+- [Rules and connector export](../artifacts/detections/custom-rules-and-osticket-connector.sanitized.ndjson) — historical rule logic with the API-key value redacted.
+- [Dashboard export](../artifacts/dashboards/elk-soc-monitoring-dashboard.ndjson) — Kibana saved objects using `logs-*`.
+- [Windows applied policy](../artifacts/fleet/windows-applied-policy.yml) — Windows/System/Sysmon/Defender/Elastic Defend inputs.
+- [Ubuntu applied policy](../artifacts/fleet/ubuntu-applied-policy.yml) — Linux log paths and datasets.
+- [Sysmon configuration](../artifacts/sysmon/sysmon-modular-balanced.xml) — third-party balanced config attributed to Olaf Hartong/Sysmon Modular.
+
+## What the final evidence set supports
 
 | Outcome | Status |
 | --- | --- |
@@ -98,10 +100,10 @@ The PDF-derived evidence identifies myVm (`10.1.0.5`) as the controlled SSH sour
 | Production-ready detection tuning | **Not demonstrated** |
 | Exported configuration artifacts | **Included; Fleet policy files are evidence snapshots, not clean import packages** |
 
-## Publication and Handling
+## Publication notes
 
-- Public architecture files intentionally omit public IPs, credentials, tokens, callback keys, and personal identifiers.
-- Historical screenshots may contain retired lab identifiers and should be reviewed before reuse outside this portfolio.
-- Redaction should use opaque replacement boxes, not blur, while preserving event IDs, timestamps, result fields, and other analytical context.
-- No screenshot should be treated as proof beyond the boundary stated in this index.
-- The seven long-form PDF evidence sets remain private supporting material; the repository uses selected screenshots for recruiter review.
+- Public architecture files leave out public IPs, credentials, tokens, callback keys, and personal identifiers.
+- Some historical screenshots contain retired lab identifiers, so I review them before reusing them elsewhere.
+- When redaction is needed, I use opaque replacement rather than blur while keeping event IDs, timestamps, and analysis fields visible.
+- I do not treat a screenshot as proof of more than the information visible in it.
+- The seven long-form PDF evidence sets remain private supporting material; the public repository uses selected screenshots for review.
